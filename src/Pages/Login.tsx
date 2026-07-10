@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
+import { login } from "../api/auth";
+import { useAuthContext } from "../context/authContext";
+import type { User } from "../types";
 
 interface Particle {
   x: number;
@@ -15,8 +18,10 @@ function Login() {
   const [usuario, setUsuario] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const navigate = useNavigate();
+  const { saveSession } = useAuthContext();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -78,7 +83,7 @@ function Login() {
     };
   }, []);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
 
@@ -87,9 +92,31 @@ function Login() {
       return;
     }
 
-    // TODO: conectar con el endpoint real de autenticación (JWT) cuando esté disponible en el backend
-    console.log("Intentando iniciar sesión con:", usuario);
-    navigate("/dashboard");
+    setIsLoading(true);
+    try {
+      const data = await login({ email: usuario, password });
+
+      const user: User = {
+        user_id: "",
+        name: data.name,
+        email: data.email,
+        role: data.role,
+      };
+
+      saveSession(data.token, user);
+
+      // Redirigir según el rol
+      if (data.role === "operator") {
+        navigate("/operator");
+      } else {
+        navigate("/dashboard");
+      }
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { data?: { error?: string } } };
+      setError(axiosErr.response?.data?.error ?? "Credenciales incorrectas.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -125,11 +152,16 @@ function Login() {
               autoComplete="current-password"
             />
           </div>
+          <div>
+            <Link to="/register" className="register-link">
+              ¿No tienes cuenta? Regístrate
+            </Link>
+          </div>
 
           {error && <div className="login-error">{error}</div>}
 
-          <button type="submit" className="login-button">
-            Entrar
+          <button type="submit" className="login-button" disabled={isLoading}>
+            {isLoading ? "Entrando..." : "Entrar"}
           </button>
         </form>
       </div>
