@@ -36,13 +36,13 @@ export function Register() {
           <div style={styles.field}>
             <label style={styles.label}>Nombre completo</label>
             <input style={styles.input} name="name" placeholder="Juan Pérez"
-              value={form.name} onChange={handleChange} required />
+              value={form.name} onChange={handleChange} required maxLength={100} />
           </div>
 
           <div style={styles.field}>
             <label style={styles.label}>Email</label>
             <input style={styles.input} name="email" type="email" placeholder="tu@email.com"
-              value={form.email} onChange={handleChange} required />
+              value={form.email} onChange={handleChange} required maxLength={100} />
           </div>
 
           <div style={styles.field}>
@@ -54,7 +54,7 @@ export function Register() {
           <div style={styles.field}>
             <label style={styles.label}>Teléfono (opcional)</label>
             <input style={styles.input} name="phone" placeholder="809-555-0000"
-              value={form.phone} onChange={handleChange} />
+              value={form.phone} onChange={handleChange}  maxLength={10}/>
           </div>
 
           {/* Botón discreto para mostrar el campo de clave de operador */}

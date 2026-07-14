@@ -138,6 +138,7 @@ function Login() {
               value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               autoComplete="username"
+              maxLength={30}
             />
           </div>
 
@@ -150,6 +151,7 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
+              maxLength={60}
             />
           </div>
           <div>
