@@ -29,8 +29,7 @@ function Login() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+
     let width = canvas.width;
     let height = canvas.height;
 
@@ -70,8 +69,6 @@ function Login() {
 
     function handleResize() {
       if (!canvas) return;
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
       width = canvas.width;
       height = canvas.height;
     }
