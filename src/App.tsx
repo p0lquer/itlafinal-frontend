@@ -8,44 +8,39 @@ import {ProtectedRoute} from './components/ProtectedRoute';
 
 const queryClient = new QueryClient()
 
-// Placeholders temporales — los crearás después
-function OperatorPage() {
-  return <h1 style={{ padding: 24 }}>Panel Operador 🔧 (en construcción)</h1>
-}
-function DashboardPage() {
-  return <h1 style={{ padding: 24 }}>Dashboard Cliente 👕 (en construcción)</h1>
-}
+
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-        {/* Solo operadores */}
-            <Route path="/operator" element={
-              <ProtectedRoute allowedRole="operator">
-                <Route path="/operator" element={<OperatorPage />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <OperatorPage />
-              </ProtectedRoute>
-            }/>
+            <Route
+              path="/operator"
+              element={
+                <ProtectedRoute allowedRole="operator">
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
 
-             {/* Solo customers */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute allowedRole="customer">
-                <DashboardPage />
-              </ProtectedRoute>
-            }/>
-  {/* Redirigir raíz al login */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute allowedRole="customer">
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="/" element={<Navigate to="/login" replace />} />
           </Routes>
-    </BrowserRouter>
-    </AuthProvider>
+        </BrowserRouter>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

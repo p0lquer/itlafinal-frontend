@@ -1,33 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./Dashboard.css";
-
-interface Customer {
-  ID: string;
-  Name: string;
-  Phone: string;
-  Email: string;
-}
-
-interface Order {
-  ID: string;
-  CustomerID: string;
-  Status: string;
-  CreatedAt: string;
-}
-
-interface NewOrderForm {
-  customer_id: string;
-  notes: string;
-  pieces_count: number;
-  service_type: string;
-}
-
-interface NewCustomerForm {
-  id: string;
-  name: string;
-  phone: string;
-  email: string;
-}
+import {
+  createCustomer,
+  createOrder,
+  deleteOrder,
+  getCustomers,
+  getOrders,
+  updateOrderStatus,
+  type Customer,
+  type NewCustomerPayload,
+  type NewOrderPayload,
+  type Order,
+} from "../api/dashboard";
 
 const ORDER_STATUSES = ["recibida", "en_proceso", "lista", "entregada"];
 
@@ -39,13 +23,13 @@ function Dashboard() {
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [showCustomerModal, setShowCustomerModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [orderForm, setOrderForm] = useState<NewOrderForm>({
+  const [orderForm, setOrderForm] = useState<NewOrderPayload>({
     customer_id: "",
     notes: "",
     pieces_count: 1,
     service_type: "",
   });
-  const [customerForm, setCustomerForm] = useState<NewCustomerForm>({
+  const [customerForm, setCustomerForm] = useState<NewCustomerPayload>({
     id: "",
     name: "",
     phone: "",
@@ -54,15 +38,12 @@ function Dashboard() {
 
   async function loadData() {
     try {
-      const [customersRes, ordersRes] = await Promise.all([
-        fetch("http://localhost:8080/api/customers"),
-        fetch("http://localhost:8080/api/orders"),
+      const [customersData, ordersData] = await Promise.all([
+        getCustomers(),
+        getOrders(),
       ]);
-      if (!customersRes.ok || !ordersRes.ok) throw new Error();
-      const customersData = await customersRes.json();
-      const ordersData = await ordersRes.json();
-      setCustomers(customersData || []);
-      setOrders(ordersData || []);
+      setCustomers(customersData);
+      setOrders(ordersData);
     } catch {
       setError("No se pudo conectar con el backend.");
     } finally {
@@ -70,23 +51,15 @@ function Dashboard() {
     }
   }
 
-  useEffect(() => {
-    loadData();
-  }, []);
 
   async function handleCreateOrder(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const res = await fetch("http://localhost:8080/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...orderForm,
-          pieces_count: Number(orderForm.pieces_count),
-        }),
+      await createOrder({
+        ...orderForm,
+        pieces_count: Number(orderForm.pieces_count),
       });
-      if (!res.ok) throw new Error();
       setShowOrderModal(false);
       setOrderForm({ customer_id: "", notes: "", pieces_count: 1, service_type: "" });
       await loadData();
@@ -101,12 +74,7 @@ function Dashboard() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const res = await fetch("http://localhost:8080/api/customers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(customerForm),
-      });
-      if (!res.ok) throw new Error();
+      await createCustomer(customerForm);
       setShowCustomerModal(false);
       setCustomerForm({ id: "", name: "", phone: "", email: "" });
       await loadData();
@@ -119,12 +87,7 @@ function Dashboard() {
 
   async function handleStatusChange(orderId: string, newStatus: string) {
     try {
-      const res = await fetch(`http://localhost:8080/api/orders/${orderId}/status`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      if (!res.ok) throw new Error();
+      await updateOrderStatus(orderId, newStatus);
       await loadData();
     } catch {
       setError("Error al actualizar el estado de la orden.");
@@ -134,10 +97,7 @@ function Dashboard() {
   async function handleDeleteOrder(orderId: string) {
     if (!confirm("¿Segura que quieres eliminar esta orden?")) return;
     try {
-      const res = await fetch(`http://localhost:8080/api/orders/${orderId}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error();
+      await deleteOrder(orderId);
       await loadData();
     } catch {
       setError("Error al eliminar la orden.");
