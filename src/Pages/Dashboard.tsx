@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Dashboard.css";
 import {
   createCustomer,
@@ -51,6 +51,33 @@ function Dashboard() {
     }
   }
 
+  useEffect(() => {
+  let active = true
+
+  ;(async () => {
+    try {
+      setLoading(true)
+
+      const [customersData, ordersData] = await Promise.all([
+        getCustomers(),
+        getOrders(),
+      ])
+
+      if (!active) return
+
+      setCustomers(customersData)
+      setOrders(ordersData)
+    } catch {
+      if (active) setError("No se pudo conectar con el backend.")
+    } finally {
+      if (active) setLoading(false)
+    }
+  })()
+
+  return () => {
+    active = false
+  }
+}, [])
 
   async function handleCreateOrder(e: React.FormEvent) {
     e.preventDefault();
