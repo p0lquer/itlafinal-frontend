@@ -12,8 +12,17 @@ import {
   type NewOrderPayload,
   type Order,
 } from "../api/dashboard";
+import { ServiceTypeSelect } from "../components/ServiceTypeSelect";
 
 const ORDER_STATUSES = ["recibida", "en_proceso", "lista", "entregada"];
+
+function createCustomerId() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+
+  return `customer-${Date.now()}`;
+}
 
 function Dashboard() {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -29,8 +38,7 @@ function Dashboard() {
     pieces_count: 1,
     service_type: "",
   });
-  const [customerForm, setCustomerForm] = useState<NewCustomerPayload>({
-    id: "",
+  const [customerForm, setCustomerForm] = useState<Omit<NewCustomerPayload, "id">>({
     name: "",
     phone: "",
     email: "",
@@ -101,9 +109,12 @@ function Dashboard() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await createCustomer(customerForm);
+      await createCustomer({
+        ...customerForm,
+        id: createCustomerId(),
+      });
       setShowCustomerModal(false);
-      setCustomerForm({ id: "", name: "", phone: "", email: "" });
+      setCustomerForm({ name: "", phone: "", email: "" });
       await loadData();
     } catch {
       setError("Error al crear el cliente.");
@@ -122,10 +133,16 @@ function Dashboard() {
   }
 
   async function handleDeleteOrder(orderId: string) {
-    if (!confirm("¿Segura que quieres eliminar esta orden?")) return;
+   const reason = prompt("Razon para eliminar la orden (opcional):");
+    if (reason === null) return; // Cancelado por el usuario
+    if (!reason.trim()) {
+      alert("Debes proporcionar una razón para eliminar la orden.");
+      return;
+    }
     try {
       await deleteOrder(orderId);
       await loadData();
+
     } catch {
       setError("Error al eliminar la orden.");
     }
@@ -251,13 +268,17 @@ function Dashboard() {
               </div>
               <div className="input-group">
                 <label>Tipo de servicio</label>
-                <input
+                <ServiceTypeSelect
+                  value={orderForm.service_type}
+                  onChange={(value) => setOrderForm({ ...orderForm, service_type: value })}
+                />
+                {/* <input
                   type="text"
                   placeholder="Ej: Lavado, Planchado, Seco"
                   value={orderForm.service_type}
                   onChange={(e) => setOrderForm({ ...orderForm, service_type: e.target.value })}
                   required
-                />
+                /> */}
               </div>
               <div className="input-group">
                 <label>Cantidad de piezas</label>
@@ -297,16 +318,7 @@ function Dashboard() {
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h2>Nuevo Cliente</h2>
             <form onSubmit={handleCreateCustomer} className="modal-form">
-              <div className="input-group">
-                <label>ID del cliente</label>
-                <input
-                  type="text"
-                  placeholder="Ej: c3, c4..."
-                  value={customerForm.id}
-                  onChange={(e) => setCustomerForm({ ...customerForm, id: e.target.value })}
-                  required
-                />
-              </div>
+              <p className="empty-state">El ID del cliente se generará automáticamente al guardar.</p>
               <div className="input-group">
                 <label>Nombre</label>
                 <input

@@ -11,6 +11,8 @@ export interface Order {
   ID: string
   CustomerID: string
   Status: string
+  service_type?: string
+  ServiceType?: string
   CreatedAt: string
 }
 
