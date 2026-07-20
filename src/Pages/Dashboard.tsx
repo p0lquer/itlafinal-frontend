@@ -7,13 +7,9 @@ import {
   getCustomers,
   getOrders,
   updateOrderStatus,
-  type Customer,
-  type NewCustomerPayload,
-  type NewOrderPayload,
-  type Order,
 } from "../api/dashboard";
 import { ServiceTypeSelect } from "../components/ServiceTypeSelect";
-
+import type { Customer, Order, NewCustomerPayload, NewOrderPayload } from "../types";
 const ORDER_STATUSES = ["recibida", "en_proceso", "lista", "entregada"];
 
 function createCustomerId() {
@@ -216,7 +212,7 @@ function Dashboard() {
                   {orders.map((o) => (
                     <tr key={o.ID}>
                       <td>{customers.find(c => c.ID === o.CustomerID)?.Name || o.CustomerID}</td>
-                      <td>{o.Status}</td>
+                      <td>{o.ServiceType}</td>
                       <td>
                         <span className={`status-badge status-${o.Status}`}>
                           {o.Status}

@@ -1,35 +1,5 @@
 import client from './clients'
-
-export interface Customer {
-  ID: string
-  Name: string
-  Phone: string
-  Email: string
-}
-
-export interface Order {
-  ID: string
-  CustomerID: string
-  Status: string
-  service_type?: string
-  ServiceType?: string
-  CreatedAt: string
-}
-
-export interface NewOrderPayload {
-  customer_id: string
-  notes: string
-  pieces_count: number
-  service_type: string
-}
-
-export interface NewCustomerPayload {
-  id: string
-  name: string
-  phone: string
-  email: string
-}
-
+import type { Customer, Order, NewOrderPayload, NewCustomerPayload } from '../types'
 export async function getCustomers() {
   const { data } = await client.get<Customer[]>('/customers')
   return data ?? []
