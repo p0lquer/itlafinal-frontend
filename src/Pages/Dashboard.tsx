@@ -129,12 +129,12 @@ function Dashboard() {
   }
 
   async function handleDeleteOrder(orderId: string) {
-   const reason = prompt("Razon para eliminar la orden (opcional):");
-    if (reason === null) return; // Cancelado por el usuario
-    if (!reason.trim()) {
-      alert("Debes proporcionar una razón para eliminar la orden.");
-      return;
-    }
+  //  const reason = prompt("Razon para eliminar la orden (opcional):");
+  //   if (reason === null) return; // Cancelado por el usuario
+  //   if (!reason.trim()) {
+  //     alert("Debes proporcionar una razón para eliminar la orden.");
+  //     return;
+  //   }
     try {
       await deleteOrder(orderId);
       await loadData();
@@ -264,10 +264,12 @@ function Dashboard() {
               </div>
               <div className="input-group">
                 <label>Tipo de servicio</label>
-                <ServiceTypeSelect
+                <div className="service-type">
+                <ServiceTypeSelect 
                   value={orderForm.service_type}
                   onChange={(value) => setOrderForm({ ...orderForm, service_type: value })}
                 />
+                </div>
                 {/* <input
                   type="text"
                   placeholder="Ej: Lavado, Planchado, Seco"

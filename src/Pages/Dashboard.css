@@ -283,6 +283,7 @@ tbody td {
   outline: none;
 }
 
+
 .status-select:focus {
   border-color: #4ade9e;
 }
