@@ -1,21 +1,32 @@
 import { useEffect, useState } from "react";
 import "./Dashboard.css";
-import {
-  createCustomer,
-  createOrder,
-  deleteOrder,
-  getCustomers,
-  getOrders,
-  updateOrderStatus,
-} from "../api/dashboard";
-import { ServiceTypeSelect } from "../components/ServiceTypeSelect";
-import type { Customer, Order, NewCustomerPayload, NewOrderPayload } from "../types";
-const ORDER_STATUSES = ["recibida", "en_proceso", "lista", "entregada"];
+import OrderDetailModal from "../components/OrderDetailModal";
 
-function createCustomerId() {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID();
-  }
+interface Customer {
+  ID: string;
+  Name: string;
+  Phone: string;
+  Email: string;
+}
+
+interface Order {
+  ID: string;
+  CustomerID: string;
+  Status: string;
+  ServiceType?: string;
+  PiecesCount?: number;
+  Notes?: string;
+  EstimatedTime?: number;
+  CreatedAt?: string;
+  ReadyAt?: string | null;
+}
+
+interface NewOrderForm {
+  customer_id: string;
+  notes: string;
+  pieces_count: number;
+  service_type: string;
+}
 
   return `customer-${Date.now()}`;
 }
@@ -210,7 +221,11 @@ function Dashboard() {
                 </thead>
                 <tbody>
                   {orders.map((o) => (
-                    <tr key={o.ID}>
+                    <tr
+                      key={o.ID}
+                      onClick={() => setSelectedOrder(o)}
+                      style={{ cursor: "pointer" }}
+                    >
                       <td>{customers.find(c => c.ID === o.CustomerID)?.Name || o.CustomerID}</td>
                       <td>{o.ServiceType}</td>
                       <td>
@@ -222,7 +237,11 @@ function Dashboard() {
                         <select
                           className="status-select"
                           value={o.Status}
-                          onChange={(e) => handleStatusChange(o.ID, e.target.value)}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            handleStatusChange(o.ID, e.target.value);
+                          }}
                         >
                           {ORDER_STATUSES.map((s) => (
                             <option key={s} value={s}>{s}</option>
@@ -230,7 +249,13 @@ function Dashboard() {
                         </select>
                       </td>
                       <td>
-                        <button className="btn-delete" onClick={() => handleDeleteOrder(o.ID)}>
+                        <button
+                          className="btn-delete"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteOrder(o.ID);
+                          }}
+                        >
                           Eliminar
                         </button>
                       </td>
@@ -359,6 +384,12 @@ function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* Modal Detalles de Orden */}
+      <OrderDetailModal
+        order={selectedOrder}
+        onClose={() => setSelectedOrder(null)}
+      />
     </div>
   );
 }

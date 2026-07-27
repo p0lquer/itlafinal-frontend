@@ -1,239 +1,176 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useAuth } from '../hook/useAuth'
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import "./Login.css";
+import "./Register.css";
 
-export function Register() {
-  const [form, setForm] = useState({
-    name: '', email: '', password: '', phone: '', operator_key: ''
-  })
-  const [showOperatorKey, setShowOperatorKey] = useState(false)
-  const { handleRegister, error, isLoading } = useAuth()
+interface Particle {
+  x: number;
+  y: number;
+  size: number;
+  speedY: number;
+  drift: number;
+  opacity: number;
+}
 
+function Register() {
+  const [form, setForm] = useState({ id: "", name: "", phone: "", email: "" });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const navigate = useNavigate();
 
-  const formatTelefono = (value: string) => {
-    // Elimina todo lo que no sea un número
-    const numbers = value.replace(/\D/g, "").slice(0, 10);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    if (numbers.length <= 3) {
-      return numbers;
-    }
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let width = canvas.width;
+    let height = canvas.height;
 
-    if (numbers.length <= 6) {
-      return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
-    }
-
-    return `${numbers.slice(0, 3)}-${numbers.slice(3, 6)}-${numbers.slice(6)}`;
-  };
-
-
-
-
-
-
-
-
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    let newValue = value;
-
-    // Aplicar formato automatico al campo de teléfono 
-    if (name === "phone") {
-      newValue = formatTelefono(value);
-    }
-
-    setForm(prev => ({
-      ...prev,
-      [name]: newValue,
+    const particles: Particle[] = Array.from({ length: 70 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 2 + 0.5,
+      speedY: Math.random() * 0.3 + 0.05,
+      drift: Math.random() * 0.4 - 0.2,
+      opacity: Math.random() * 0.5 + 0.1,
     }));
-  };
 
+    let animationId: number;
 
-
-
-
-
-
-
-
-
-
-
-
-
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-
-    // Validación de correo electrónico
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!emailRegex.test(form.email)) {
-      alert("Correo electrónico no válido.");
-      return;
+    function draw() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach((pt) => {
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(74, 222, 158, ${pt.opacity})`;
+        ctx.fill();
+        pt.y -= pt.speedY;
+        pt.x += pt.drift;
+        if (pt.y < -10) { pt.y = height + 10; pt.x = Math.random() * width; }
+        if (pt.x < -10) pt.x = width + 10;
+        if (pt.x > width + 10) pt.x = -10;
+      });
+      animationId = requestAnimationFrame(draw);
     }
+    draw();
 
-    //validación de contraseña
-    if (form.password.length < 8) {
-      alert("La contraseña debe tener al menos 8 caracteres.");
-      return;
+    function handleResize() {
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      width = canvas.width;
+      height = canvas.height;
     }
+    window.addEventListener("resize", handleResize);
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
-
-
-
-
-
-
-
-
-
-
-
-    handleRegister({
-      name: form.name,
-      email: form.email,
-      password: form.password,
-      phone: form.phone || undefined,
-      operator_key: form.operator_key || undefined,
-    })
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setError("");
   }
 
-
-
-
-
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    if (!form.id.trim() || !form.name.trim()) {
+      setError("El ID y el nombre son obligatorios.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch("http://localhost:8080/api/customers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: form.id.trim(),
+          name: form.name.trim(),
+          phone: form.phone.trim() || undefined,
+          email: form.email.trim() || undefined,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.message || "No se pudo registrar el cliente.");
+      }
+      setSuccess(true);
+      setTimeout(() => navigate("/login"), 1800);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Error al conectar con el servidor.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>BetterTime 🧺</h1>
-        <p style={styles.subtitle}>Crea tu cuenta</p>
+    <div className="login-page">
+      <canvas ref={canvasRef} className="particles-canvas" />
+      <div className="login-card register-card">
+        <div className="login-eyebrow">SISTEMA DE GESTIÓN DE ÓRDENES</div>
+        <h1 className="login-title">Crear Cuenta</h1>
+        <p className="login-subtitle">Regístrate para acceder al panel de operación</p>
 
-        {error && <div style={styles.error}>{error}</div>}
-
-        <form onSubmit={onSubmit}>
-          <div style={styles.field}>
-            <label style={styles.label}>Nombre completo</label>
-            <input style={styles.input} name="name" placeholder="Juan Pérez"
-              value={form.name} onChange={handleChange} required maxLength={100} />
+        {success ? (
+          <div className="register-success">
+            <span className="register-success-icon">✓</span>
+            <p>¡Registro exitoso!</p>
+            <p className="register-success-sub">Redirigiendo al login...</p>
           </div>
-
-          <div style={styles.field}>
-            <label style={styles.label}>Email</label>
-            <input style={styles.input} name="email" type="email" placeholder="tu@email.com"
-              value={form.email} onChange={handleChange} required maxLength={100} />
-          </div>
-
-          <div style={styles.field}>
-            <label style={styles.label}>Contraseña</label>
-            <input style={styles.input} name="password" type="password" placeholder="Mínimo 8 caracteres"
-              value={form.password} onChange={handleChange} required minLength={8} maxLength={65} />
-          </div>
-
-          <div style={styles.field}>
-            <label style={styles.label}>Teléfono (opcional)</label>
-            <input style={styles.input} name="phone" placeholder="809-555-0000"
-              value={form.phone} onChange={handleChange} maxLength={12} />
-          </div>
-
-          {/* Botón discreto para mostrar el campo de clave de operador */}
-          <div style={{ textAlign: 'center', marginBottom: '12px' }}>
-            <button
-              type="button"
-              onClick={() => setShowOperatorKey(prev => !prev)}
-              style={styles.toggleBtn}
-            >
-              {showOperatorKey ? 'Soy cliente normal' : '¿Eres operador?'}
-            </button>
-          </div>
-
-          {showOperatorKey && (
-            <div style={styles.field}>
-              <label style={styles.label}>Clave de operador</label>
-              <input style={styles.input} name="operator_key" type="password"
-                placeholder="Ingresa la clave del negocio"
-                value={form.operator_key} onChange={handleChange} />
-              <small style={{ color: '#888', fontSize: '12px' }}>
-                Esta clave la provee el administrador del negocio.
-              </small>
+        ) : (
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="input-group">
+              <label htmlFor="id">
+                ID de cliente <span className="register-required">*</span>
+              </label>
+              <input id="id" name="id" type="text" placeholder="ej: c7"
+                value={form.id} onChange={handleChange} autoComplete="off" />
             </div>
-          )}
+            <div className="input-group">
+              <label htmlFor="name">
+                Nombre completo <span className="register-required">*</span>
+              </label>
+              <input id="name" name="name" type="text" placeholder="Tu nombre"
+                value={form.name} onChange={handleChange} autoComplete="name" />
+            </div>
+            <div className="input-group">
+              <label htmlFor="phone">
+                Teléfono <span className="register-optional">(opcional)</span>
+              </label>
+              <input id="phone" name="phone" type="tel" placeholder="809-000-0000"
+                value={form.phone} onChange={handleChange} autoComplete="tel" />
+            </div>
+            <div className="input-group">
+              <label htmlFor="email">
+                Correo electrónico <span className="register-optional">(opcional)</span>
+              </label>
+              <input id="email" name="email" type="email" placeholder="correo@mail.com"
+                value={form.email} onChange={handleChange} autoComplete="email" />
+            </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            style={isLoading ? { ...styles.button, opacity: 0.7 } : styles.button}
-          >
-            {isLoading ? 'Registrando...' : 'Crear Cuenta'}
-          </button>
-        </form>
+            {error && <div className="login-error">{error}</div>}
 
-        <p style={styles.link}>
-          ¿Ya tienes cuenta?{' '}
-          <Link to="/login" style={{ color: '#2e86c1' }}>Inicia sesión</Link>
-        </p>
+            <button type="submit" className="login-button" disabled={loading}>
+              {loading ? "Registrando..." : "Registrarse"}
+            </button>
+
+            <p className="register-link">
+              ¿Ya tienes cuenta?{" "}
+              <Link to="/login">Iniciar Sesión</Link>
+            </p>
+          </form>
+        )}
       </div>
     </div>
-  )
+  );
 }
 
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    minHeight: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f0f4f8',
-  },
-  card: {
-    backgroundColor: 'white',
-    padding: '40px',
-    borderRadius: '16px',
-    boxShadow: '0 4px 24px rgba(0,0,0,0.1)',
-    width: '100%',
-    maxWidth: '420px',
-  },
-  title: { margin: 0, textAlign: 'center', color: '#1b4f72', fontSize: '28px' },
-  subtitle: { textAlign: 'center', color: '#888', marginBottom: '24px' },
-  error: {
-    backgroundColor: '#fdecea',
-    color: '#c0392b',
-    padding: '12px',
-    borderRadius: '8px',
-    marginBottom: '16px',
-    fontSize: '14px',
-  },
-  field: { marginBottom: '16px' },
-  label: { display: 'block', marginBottom: '6px', fontSize: '14px', fontWeight: 600, color: '#333' },
-  input: {
-    width: '100%',
-    padding: '10px 14px',
-    borderRadius: '8px',
-    border: '1px solid #ddd',
-    fontSize: '15px',
-    boxSizing: 'border-box',
-  },
-  button: {
-    width: '100%',
-    padding: '12px',
-    backgroundColor: '#1b4f72',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    fontSize: '16px',
-    fontWeight: 700,
-    cursor: 'pointer',
-    marginTop: '8px',
-  },
-  toggleBtn: {
-    background: 'none',
-    border: 'none',
-    color: '#2e86c1',
-    cursor: 'pointer',
-    fontSize: '13px',
-    textDecoration: 'underline',
-  },
-  link: { textAlign: 'center', marginTop: '20px', fontSize: '14px', color: '#666' },
-}
+export default Register;
