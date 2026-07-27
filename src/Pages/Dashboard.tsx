@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Dashboard.css";
+import OrderDetailModal from "../components/OrderDetailModal";
 
 interface Customer {
   ID: string;
@@ -12,7 +13,12 @@ interface Order {
   ID: string;
   CustomerID: string;
   Status: string;
-  CreatedAt: string;
+  ServiceType?: string;
+  PiecesCount?: number;
+  Notes?: string;
+  EstimatedTime?: number;
+  CreatedAt?: string;
+  ReadyAt?: string | null;
 }
 
 interface NewOrderForm {
@@ -39,6 +45,7 @@ function Dashboard() {
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [showCustomerModal, setShowCustomerModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [orderForm, setOrderForm] = useState<NewOrderForm>({
     customer_id: "",
     notes: "",
@@ -210,7 +217,11 @@ function Dashboard() {
                 </thead>
                 <tbody>
                   {orders.map((o) => (
-                    <tr key={o.ID}>
+                    <tr
+                      key={o.ID}
+                      onClick={() => setSelectedOrder(o)}
+                      style={{ cursor: "pointer" }}
+                    >
                       <td>{customers.find(c => c.ID === o.CustomerID)?.Name || o.CustomerID}</td>
                       <td>{o.Status}</td>
                       <td>
@@ -222,7 +233,11 @@ function Dashboard() {
                         <select
                           className="status-select"
                           value={o.Status}
-                          onChange={(e) => handleStatusChange(o.ID, e.target.value)}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            handleStatusChange(o.ID, e.target.value);
+                          }}
                         >
                           {ORDER_STATUSES.map((s) => (
                             <option key={s} value={s}>{s}</option>
@@ -230,7 +245,13 @@ function Dashboard() {
                         </select>
                       </td>
                       <td>
-                        <button className="btn-delete" onClick={() => handleDeleteOrder(o.ID)}>
+                        <button
+                          className="btn-delete"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteOrder(o.ID);
+                          }}
+                        >
                           Eliminar
                         </button>
                       </td>
@@ -362,6 +383,12 @@ function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* Modal Detalles de Orden */}
+      <OrderDetailModal
+        order={selectedOrder}
+        onClose={() => setSelectedOrder(null)}
+      />
     </div>
   );
 }

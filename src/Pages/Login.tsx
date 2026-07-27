@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
+import "./Register.css";
 
 interface Particle {
   x: number;
@@ -48,14 +49,9 @@ function Login() {
         ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(74, 222, 158, ${pt.opacity})`;
         ctx.fill();
-
         pt.y -= pt.speedY;
         pt.x += pt.drift;
-
-        if (pt.y < -10) {
-          pt.y = height + 10;
-          pt.x = Math.random() * width;
-        }
+        if (pt.y < -10) { pt.y = height + 10; pt.x = Math.random() * width; }
         if (pt.x < -10) pt.x = width + 10;
         if (pt.x > width + 10) pt.x = -10;
       });
@@ -71,7 +67,6 @@ function Login() {
       height = canvas.height;
     }
     window.addEventListener("resize", handleResize);
-
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", handleResize);
@@ -81,13 +76,10 @@ function Login() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-
     if (!usuario.trim() || !password.trim()) {
       setError("Completa usuario y contraseña para continuar.");
       return;
     }
-
-    // TODO: conectar con el endpoint real de autenticación (JWT) cuando esté disponible en el backend
     console.log("Intentando iniciar sesión con:", usuario);
     navigate("/dashboard");
   }
@@ -95,7 +87,6 @@ function Login() {
   return (
     <div className="login-page">
       <canvas ref={canvasRef} className="particles-canvas" />
-
       <div className="login-card">
         <div className="login-eyebrow">SISTEMA DE GESTIÓN DE ÓRDENES</div>
         <h1 className="login-title">Iniciar Sesión</h1>
@@ -113,7 +104,6 @@ function Login() {
               autoComplete="username"
             />
           </div>
-
           <div className="input-group">
             <label htmlFor="password">Contraseña</label>
             <input
@@ -131,6 +121,11 @@ function Login() {
           <button type="submit" className="login-button">
             Entrar
           </button>
+
+          <p className="register-link">
+            ¿No tienes cuenta?{" "}
+            <Link to="/register">Regístrate aquí</Link>
+          </p>
         </form>
       </div>
     </div>
