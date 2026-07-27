@@ -9,20 +9,101 @@ export function Register() {
   const [showOperatorKey, setShowOperatorKey] = useState(false)
   const { handleRegister, error, isLoading } = useAuth()
 
+
+  const formatTelefono = (value: string) => {
+    // Elimina todo lo que no sea un número
+    const numbers = value.replace(/\D/g, "").slice(0, 10);
+
+    if (numbers.length <= 3) {
+      return numbers;
+    }
+
+    if (numbers.length <= 6) {
+      return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+    }
+
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 6)}-${numbers.slice(6)}`;
+  };
+
+
+
+
+
+
+
+
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
-  }
+    const { name, value } = e.target;
+
+    let newValue = value;
+
+    // Aplicar formato automatico al campo de teléfono 
+    if (name === "phone") {
+      newValue = formatTelefono(value);
+    }
+
+    setForm(prev => ({
+      ...prev,
+      [name]: newValue,
+    }));
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+
+    // Validación de correo electrónico
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(form.email)) {
+      alert("Correo electrónico no válido.");
+      return;
+    }
+
+    //validación de contraseña
+    if (form.password.length < 8) {
+      alert("La contraseña debe tener al menos 8 caracteres.");
+      return;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     handleRegister({
-      name:         form.name,
-      email:        form.email,
-      password:     form.password,
-      phone:        form.phone || undefined,
+      name: form.name,
+      email: form.email,
+      password: form.password,
+      phone: form.phone || undefined,
       operator_key: form.operator_key || undefined,
     })
   }
+
+
+
+
+
 
   return (
     <div style={styles.container}>
@@ -47,14 +128,14 @@ export function Register() {
 
           <div style={styles.field}>
             <label style={styles.label}>Contraseña</label>
-            <input style={styles.input} name="password" type="password" placeholder="Mínimo 6 caracteres"
-              value={form.password} onChange={handleChange} required minLength={6} />
+            <input style={styles.input} name="password" type="password" placeholder="Mínimo 8 caracteres"
+              value={form.password} onChange={handleChange} required minLength={8} maxLength={65} />
           </div>
 
           <div style={styles.field}>
             <label style={styles.label}>Teléfono (opcional)</label>
             <input style={styles.input} name="phone" placeholder="809-555-0000"
-              value={form.phone} onChange={handleChange}  maxLength={10}/>
+              value={form.phone} onChange={handleChange} maxLength={12} />
           </div>
 
           {/* Botón discreto para mostrar el campo de clave de operador */}
