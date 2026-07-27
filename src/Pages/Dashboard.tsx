@@ -1,39 +1,33 @@
 import { useEffect, useState } from "react";
 import "./Dashboard.css";
 import OrderDetailModal from "../components/OrderDetailModal";
+import  ServiceTypeSelect  from  "../components/ServiceTypeSelect";
+import {
+  
+  type Customer, 
+  type NewCustomerPayload, 
+  type NewOrderPayload, 
+  type Order 
+} from "../types";
 
-interface Customer {
-  ID: string;
-  Name: string;
-  Phone: string;
-  Email: string;
-}
+import {
+  createCustomer, createOrder, deleteOrder, getCustomers, getOrders, updateOrderStatus} from "../api/dashboard";
+  
+  
 
-interface Order {
-  ID: string;
-  CustomerID: string;
-  Status: string;
-  ServiceType?: string;
-  PiecesCount?: number;
-  Notes?: string;
-  EstimatedTime?: number;
-  CreatedAt?: string;
-  ReadyAt?: string | null;
-}
+const ORDER_STATUSES = ["pending", "in_progress", "completed", "cancelled"];
 
-interface NewOrderForm {
-  customer_id: string;
-  notes: string;
-  pieces_count: number;
-  service_type: string;
-}
 
-  return `customer-${Date.now()}`;
-}
+
+ // return `customer-${Date.now()}`; ???
+
+//  const selectServiceType = ServiceTypeSelect.useServiceTypes()
+
 
 function Dashboard() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showOrderModal, setShowOrderModal] = useState(false);
@@ -118,10 +112,10 @@ function Dashboard() {
     try {
       await createCustomer({
         ...customerForm,
-        id: createCustomerId(),
+        id: ""
       });
       setShowCustomerModal(false);
-      setCustomerForm({ name: "", phone: "", email: "" });
+      setCustomerForm({ name: "", phone: "", email: "", });
       await loadData();
     } catch {
       setError("Error al crear el cliente.");
@@ -140,12 +134,12 @@ function Dashboard() {
   }
 
   async function handleDeleteOrder(orderId: string) {
-  //  const reason = prompt("Razon para eliminar la orden (opcional):");
-  //   if (reason === null) return; // Cancelado por el usuario
-  //   if (!reason.trim()) {
-  //     alert("Debes proporcionar una razón para eliminar la orden.");
-  //     return;
-  //   }
+   const reason = prompt("Razon para eliminar la orden (opcional):");
+    if (reason === null) return; // Cancelado por el usuario
+    if (!reason.trim()) {
+      alert("Debes proporcionar una razón para eliminar la orden.");
+      return;
+    }
     try {
       await deleteOrder(orderId);
       await loadData();
@@ -216,7 +210,7 @@ function Dashboard() {
                     <th>Servicio</th>
                     <th>Estado</th>
                     <th>Cambiar</th>
-                    <th></th>
+                    <th>Eliminar</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -290,18 +284,18 @@ function Dashboard() {
               <div className="input-group">
                 <label>Tipo de servicio</label>
                 <div className="service-type">
-                <ServiceTypeSelect 
+                <ServiceTypeSelect
                   value={orderForm.service_type}
-                  onChange={(value) => setOrderForm({ ...orderForm, service_type: value })}
+                  onChange={(value: string) => setOrderForm({ ...orderForm, service_type: value })}
                 />
                 </div>
-                {/* <input
+                <input
                   type="text"
                   placeholder="Ej: Lavado, Planchado, Seco"
                   value={orderForm.service_type}
                   onChange={(e) => setOrderForm({ ...orderForm, service_type: e.target.value })}
                   required
-                /> */}
+                />
               </div>
               <div className="input-group">
                 <label>Cantidad de piezas</label>

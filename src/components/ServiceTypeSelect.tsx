@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useServiceTypes, useCreateServiceType } from '../hooks/useServiceTypes'
+import { useServiceTypes, useCreateServiceType } from '../hook/useServiceTypes'
 
 interface Props {
   value: string
@@ -206,3 +206,5 @@ const styles: Record<string, React.CSSProperties> = {
     fontStyle: 'italic',
   },
 }
+
+export default ServiceTypeSelect

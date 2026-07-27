@@ -3,17 +3,22 @@ import { getServiceTypes, createServiceType } from '../api/service_type'
 
 const KEY = ['service-types']
 
-export function useServiceTypes() {
+export const  useServiceTypes = () => {
   return useQuery({
     queryKey: KEY,
     queryFn: getServiceTypes,
   })
 }
 
-export function useCreateServiceType() {
+export const useCreateServiceType = () => {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: createServiceType,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: KEY }),
   })
+}
+
+
+export default { useServiceTypes,
+  useCreateServiceType,
 }

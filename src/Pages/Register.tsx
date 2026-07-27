@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import {Link } from "react-router-dom";
 import "./Login.css";
 import "./Register.css";
+import { useAuth } from '../hook/useAuth'
 
 interface Particle {
   x: number;
@@ -11,14 +12,50 @@ interface Particle {
   drift: number;
   opacity: number;
 }
+interface RegisterForm {
+  name: string;
+  phone: string;
+  email: string;
+  password: string;
+  operator_key?: string;
+}
+
+
+function formatTelefono(value: string) {
+  const numbers = value.replace(/\D/g, "").slice(0, 10);
+  if (numbers.length <= 3) return numbers;
+  if (numbers.length <= 6) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+  return `${numbers.slice(0, 3)}-${numbers.slice(3, 6)}-${numbers.slice(6)}`;
+}
+
+  // Validación de correo electrónico
+    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
 
 function Register() {
-  const [form, setForm] = useState({ id: "", name: "", phone: "", email: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const navigate = useNavigate();
+  const { handleRegister } = useAuth()
+  const [showOperatorKey, setShowOperatorKey] = useState(false)
+    const [form, setForm] = useState<RegisterForm>({
+    name: "",
+    phone: "",
+    email: "",
+    password: "",
+    operator_key: "",
+  });
+ 
+
+function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+    const newValue = name === "phone" ? formatTelefono(value) : value;
+    setForm(prev => ({ ...prev, [name]: newValue }));
+    setError("");
+  }
+
+
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -74,44 +111,45 @@ function Register() {
     };
   }, []);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setError("");
+  function validate(): string | null {
+    if (!form.name.trim()) {
+      return "El nombre es obligatorio.";
+    }
+    if (form.email.trim() && !EMAIL_REGEX.test(form.email.trim())) {
+      return "Correo electrónico no válido.";
+    }
+    if (form.phone.trim() && form.phone.replace(/\D/g, "").length < 10) {
+      return "Número de teléfono incompleto.";
+    }
+    if (!form.password || form.password.length < 8) {
+      return "La contraseña debe tener al menos 8 caracteres.";
+    }
+    return null;
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (!form.id.trim() || !form.name.trim()) {
-      setError("El ID y el nombre son obligatorios.");
+    const validationError = validate();
+    if (validationError) {
+      setError(validationError);
       return;
     }
     setLoading(true);
-    try {
-      const res = await fetch("http://localhost:8080/api/customers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: form.id.trim(),
+
+      handleRegister({
           name: form.name.trim(),
-          phone: form.phone.trim() || undefined,
-          email: form.email.trim() || undefined,
-        }),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data?.message || "No se pudo registrar el cliente.");
-      }
-      setSuccess(true);
-      setTimeout(() => navigate("/login"), 1800);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Error al conectar con el servidor.");
-    } finally {
-      setLoading(false);
-    }
+          phone: form.phone.trim(),
+          email: form.email.trim(),
+          password: form.password,
+          operator_key: form.operator_key || undefined,
+        })
+               
   }
 
-  return (
+
+
+return (
     <div className="login-page">
       <canvas ref={canvasRef} className="particles-canvas" />
       <div className="login-card register-card">
@@ -119,21 +157,8 @@ function Register() {
         <h1 className="login-title">Crear Cuenta</h1>
         <p className="login-subtitle">Regístrate para acceder al panel de operación</p>
 
-        {success ? (
-          <div className="register-success">
-            <span className="register-success-icon">✓</span>
-            <p>¡Registro exitoso!</p>
-            <p className="register-success-sub">Redirigiendo al login...</p>
-          </div>
-        ) : (
+  
           <form onSubmit={handleSubmit} className="login-form">
-            <div className="input-group">
-              <label htmlFor="id">
-                ID de cliente <span className="register-required">*</span>
-              </label>
-              <input id="id" name="id" type="text" placeholder="ej: c7"
-                value={form.id} onChange={handleChange} autoComplete="off" />
-            </div>
             <div className="input-group">
               <label htmlFor="name">
                 Nombre completo <span className="register-required">*</span>
@@ -143,18 +168,44 @@ function Register() {
             </div>
             <div className="input-group">
               <label htmlFor="phone">
-                Teléfono <span className="register-optional">(opcional)</span>
+                Teléfono <span className="register-optional"></span>
               </label>
               <input id="phone" name="phone" type="tel" placeholder="809-000-0000"
                 value={form.phone} onChange={handleChange} autoComplete="tel" />
             </div>
             <div className="input-group">
               <label htmlFor="email">
-                Correo electrónico <span className="register-optional">(opcional)</span>
+                Correo electrónico <span className="register-optional"></span>
               </label>
               <input id="email" name="email" type="email" placeholder="correo@mail.com"
                 value={form.email} onChange={handleChange} autoComplete="email" />
             </div>
+            <div className="input-group">
+              <label htmlFor="password">
+                Contraseña <span className="register-required">*</span>
+              </label>
+              <input id="password" name="password" type="password" placeholder="tu contraseña"
+                value={form.password} onChange={handleChange} autoComplete="new-password" />
+            </div>
+
+             {/* Botón discreto para mostrar el campo de clave de operador */}
+          <div className="input-group">
+            <button className="toggle-operator-key-btn"
+              type="button"
+              onClick={() => setShowOperatorKey(prev => !prev)}
+            >
+              {showOperatorKey ? 'Soy cliente normal' : '¿Eres operador?'}
+            </button>
+          </div>
+
+          {showOperatorKey && (
+            <div className="input-group">
+              <label htmlFor="operator_key">Clave de operador</label>
+              <input id="operator_key" name="operator_key" type="password"
+                placeholder="Ingresa la clave del negocio"
+                value={form.operator_key} onChange={handleChange} />
+            </div>
+          )}
 
             {error && <div className="login-error">{error}</div>}
 
@@ -167,7 +218,7 @@ function Register() {
               <Link to="/login">Iniciar Sesión</Link>
             </p>
           </form>
-        )}
+
       </div>
     </div>
   );

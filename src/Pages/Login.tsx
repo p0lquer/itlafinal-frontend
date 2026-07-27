@@ -142,11 +142,6 @@ function Login() {
               maxLength={60}
             />
           </div>
-          <div>
-            <Link to="/register" className="register-link">
-              ¿No tienes cuenta? Regístrate
-            </Link>
-          </div>
 
           {error && <div className="login-error">{error}</div>}
 
