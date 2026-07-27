@@ -1,0 +1,8 @@
+.add-service-type-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background-color: #11211a;
+  border-radius: 8px;
+}
