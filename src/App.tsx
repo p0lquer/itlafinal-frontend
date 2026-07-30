@@ -1,14 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import  Register  from './pages/Register';
+import { Register } from './pages/Register';
+import OrderHistory from "./Pages/OrderHistory";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './context/authContext';
 import {ProtectedRoute} from './components/ProtectedRoute';
 
 const queryClient = new QueryClient()
-
-
 
 function App() {
   return (
@@ -33,6 +32,15 @@ function App() {
               element={
                 <ProtectedRoute allowedRole="customer">
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/historial"
+              element={
+                <ProtectedRoute allowedRole="customer">
+                  <OrderHistory />
                 </ProtectedRoute>
               }
             />
