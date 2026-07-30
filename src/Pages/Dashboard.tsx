@@ -9,19 +9,10 @@ import {
   type NewOrderPayload, 
   type Order 
 } from "../types";
-
 import {
   createCustomer, createOrder, deleteOrder, getCustomers, getOrders, updateOrderStatus} from "../api/dashboard";
-  
-  
-
 const ORDER_STATUSES = ["pending", "in_progress", "completed", "cancelled"];
 
-
-
- // return `customer-${Date.now()}`; ???
-
-//  const selectServiceType = ServiceTypeSelect.useServiceTypes()
 
 
 function Dashboard() {
@@ -289,13 +280,13 @@ function Dashboard() {
                   onChange={(value: string) => setOrderForm({ ...orderForm, service_type: value })}
                 />
                 </div>
-                <input
+                {/* <input
                   type="text"
                   placeholder="Ej: Lavado, Planchado, Seco"
                   value={orderForm.service_type}
                   onChange={(e) => setOrderForm({ ...orderForm, service_type: e.target.value })}
                   required
-                />
+                /> */}
               </div>
               <div className="input-group">
                 <label>Cantidad de piezas</label>

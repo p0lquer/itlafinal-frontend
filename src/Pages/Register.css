@@ -74,3 +74,19 @@
   cursor: pointer;
   margin-bottom: 12px;
 }
+
+.success-modal {
+  background: linear-gradient(160deg, #0c1a13 0%, #081310 100%);
+  border: 1px solid rgba(74, 222, 158, 0.2);
+  border-radius: 16px;
+  padding: 32px;
+  width: 370px;
+}
+
+.success-modal p {
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  align-self: center;
+}
