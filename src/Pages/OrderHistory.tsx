@@ -29,9 +29,10 @@ export default function OrderHistory() {
         return res.json();
       })
       .then((data) => {
-        setOrders(data);
-        setLoading(false);
-      })
+  const list = Array.isArray(data) ? data : (data.orders || data.data || []);
+  setOrders(list);
+  setLoading(false);
+})
       .catch(() => {
         setError("No se pudo cargar el historial.");
         setLoading(false);
