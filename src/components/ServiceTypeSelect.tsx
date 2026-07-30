@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useServiceTypes, useCreateServiceType } from '../hook/useServiceTypes'
 
+
 interface Props {
   value: string
   onChange: (value: string) => void
@@ -15,6 +16,8 @@ export function ServiceTypeSelect({ value, onChange }: Props) {
   const { data: serviceTypes, isLoading } = useServiceTypes()
   const createType = useCreateServiceType()
 
+  const existingNames = serviceTypes?.map(st => st.Name.toLowerCase()) || []  
+
   const handleAdd = async () => {
     try {
       await createType.mutateAsync({ name: newName.trim(), description: newDesc.trim() })
@@ -28,6 +31,15 @@ export function ServiceTypeSelect({ value, onChange }: Props) {
     if (!newName.trim()) {
       setAddError('El nombre es requerido')
     
+      if (newName.trim().length < 3) {
+        setAddError('El nombre debe tener al menos 3 caracteres')
+      }
+
+      if (existingNames.includes(newName.trim().toLowerCase())) {
+        setAddError('Ya existe un tipo de servicio con ese nombre')
+      }
+
+
       return
    
     }
@@ -61,7 +73,6 @@ export function ServiceTypeSelect({ value, onChange }: Props) {
             value={value}
             onChange={e => onChange(e.target.value)}
           >
-            <option value=""> Selecciona un servicio </option>
             {serviceTypes?.map(st => (
               <option key={st.ID} value={st.Name}>
                 {st.Name}
@@ -89,6 +100,7 @@ export function ServiceTypeSelect({ value, onChange }: Props) {
             style={styles.input}
             placeholder="Nombre del servicio (ej: Blanqueamiento)"
             value={newName}
+          
             onChange={e => setNewName(e.target.value)}
             autoFocus
           />

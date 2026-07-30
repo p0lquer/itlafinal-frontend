@@ -34,10 +34,9 @@ function formatTelefono(value: string) {
 
 
 function Register() {
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [validationError, setValidationError] = useState("");
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { handleRegister } = useAuth()
+  const { handleRegister, error: apiError, isLoading } = useAuth()
   const [showOperatorKey, setShowOperatorKey] = useState(false)
     const [form, setForm] = useState<RegisterForm>({
     name: "",
@@ -52,7 +51,7 @@ function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     const newValue = name === "phone" ? formatTelefono(value) : value;
     setForm(prev => ({ ...prev, [name]: newValue }));
-    setError("");
+    setValidationError("");
   }
 
 
@@ -129,23 +128,24 @@ function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError("");
+   setValidationError("");
     const validationError = validate();
     if (validationError) {
-      setError(validationError);
+      setValidationError(validationError);
       return;
     }
-    setLoading(true);
 
-      handleRegister({
+        await handleRegister({
           name: form.name.trim(),
           phone: form.phone.trim(),
           email: form.email.trim(),
           password: form.password,
           operator_key: form.operator_key || undefined,
-        })
-               
+        });
   }
+        
+        
+  
 
 
 
@@ -207,11 +207,14 @@ return (
             </div>
           )}
 
-            {error && <div className="login-error">{error}</div>}
 
-            <button type="submit" className="login-button" disabled={loading}>
-              {loading ? "Registrando..." : "Registrarse"}
-            </button>
+          {(validationError || apiError) && (
+  <div className="login-error">{validationError || apiError}</div>
+)}
+
+<button type="submit" className="login-button" disabled={isLoading}>
+  {isLoading ? "Registrando..." : "Registrarse"}
+</button>
 
             <p className="register-link">
               ¿Ya tienes cuenta?{" "}
