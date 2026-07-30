@@ -57,6 +57,7 @@
   border-radius: 14px;
   padding: 22px 24px;
   box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), 0 0 40px -5px rgba(74, 222, 158, 0.15);
+  
 }
 
 .dashboard-card h2 {
@@ -68,7 +69,7 @@
   margin-bottom: 16px;
   padding-bottom: 16px;
   border-bottom: 1px solid rgba(74, 222, 158, 0.12);
-  margin-left: -30px;  
+  margin-left: -5px;  
 
 }
 
@@ -282,6 +283,7 @@ tbody td {
   cursor: pointer;
   outline: none;
 }
+
 
 .status-select:focus {
   border-color: #4ade9e;

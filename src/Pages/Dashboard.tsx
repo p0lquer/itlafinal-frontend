@@ -1,32 +1,24 @@
 import { useEffect, useState } from "react";
 import "./Dashboard.css";
+import OrderDetailModal from "../components/OrderDetailModal";
+import  ServiceTypeSelect  from  "../components/ServiceTypeSelect";
 import {
-  createCustomer,
-  createOrder,
-  deleteOrder,
-  getCustomers,
-  getOrders,
-  updateOrderStatus,
-  type Customer,
-  type NewCustomerPayload,
-  type NewOrderPayload,
-  type Order,
-} from "../api/dashboard";
-import { ServiceTypeSelect } from "../components/ServiceTypeSelect";
+  
+  type Customer, 
+  type NewCustomerPayload, 
+  type NewOrderPayload, 
+  type Order 
+} from "../types";
+import {
+  createCustomer, createOrder, deleteOrder, getCustomers, getOrders, updateOrderStatus} from "../api/dashboard";
+const ORDER_STATUSES = ["pending", "in_progress", "completed", "cancelled"];
 
-const ORDER_STATUSES = ["recibida", "en_proceso", "lista", "entregada"];
 
-function createCustomerId() {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID();
-  }
-
-  return `customer-${Date.now()}`;
-}
 
 function Dashboard() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showOrderModal, setShowOrderModal] = useState(false);
@@ -111,10 +103,10 @@ function Dashboard() {
     try {
       await createCustomer({
         ...customerForm,
-        id: createCustomerId(),
+        id: ""
       });
       setShowCustomerModal(false);
-      setCustomerForm({ name: "", phone: "", email: "" });
+      setCustomerForm({ name: "", phone: "", email: "", });
       await loadData();
     } catch {
       setError("Error al crear el cliente.");
@@ -209,14 +201,18 @@ function Dashboard() {
                     <th>Servicio</th>
                     <th>Estado</th>
                     <th>Cambiar</th>
-                    <th></th>
+                    <th>Eliminar</th>
                   </tr>
                 </thead>
                 <tbody>
                   {orders.map((o) => (
-                    <tr key={o.ID}>
+                    <tr
+                      key={o.ID}
+                      onClick={() => setSelectedOrder(o)}
+                      style={{ cursor: "pointer" }}
+                    >
                       <td>{customers.find(c => c.ID === o.CustomerID)?.Name || o.CustomerID}</td>
-                      <td>{o.Status}</td>
+                      <td>{o.ServiceType}</td>
                       <td>
                         <span className={`status-badge status-${o.Status}`}>
                           {o.Status}
@@ -226,7 +222,11 @@ function Dashboard() {
                         <select
                           className="status-select"
                           value={o.Status}
-                          onChange={(e) => handleStatusChange(o.ID, e.target.value)}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            handleStatusChange(o.ID, e.target.value);
+                          }}
                         >
                           {ORDER_STATUSES.map((s) => (
                             <option key={s} value={s}>{s}</option>
@@ -234,7 +234,13 @@ function Dashboard() {
                         </select>
                       </td>
                       <td>
-                        <button className="btn-delete" onClick={() => handleDeleteOrder(o.ID)}>
+                        <button
+                          className="btn-delete"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteOrder(o.ID);
+                          }}
+                        >
                           Eliminar
                         </button>
                       </td>
@@ -268,10 +274,12 @@ function Dashboard() {
               </div>
               <div className="input-group">
                 <label>Tipo de servicio</label>
+                <div className="service-type">
                 <ServiceTypeSelect
                   value={orderForm.service_type}
-                  onChange={(value) => setOrderForm({ ...orderForm, service_type: value })}
+                  onChange={(value: string) => setOrderForm({ ...orderForm, service_type: value })}
                 />
+                </div>
                 {/* <input
                   type="text"
                   placeholder="Ej: Lavado, Planchado, Seco"
@@ -361,6 +369,12 @@ function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* Modal Detalles de Orden */}
+      <OrderDetailModal
+        order={selectedOrder}
+        onClose={() => setSelectedOrder(null)}
+      />
     </div>
   );
 }

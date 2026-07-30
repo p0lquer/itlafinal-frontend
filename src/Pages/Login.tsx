@@ -52,14 +52,9 @@ function Login() {
         ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(74, 222, 158, ${pt.opacity})`;
         ctx.fill();
-
         pt.y -= pt.speedY;
         pt.x += pt.drift;
-
-        if (pt.y < -10) {
-          pt.y = height + 10;
-          pt.x = Math.random() * width;
-        }
+        if (pt.y < -10) { pt.y = height + 10; pt.x = Math.random() * width; }
         if (pt.x < -10) pt.x = width + 10;
         if (pt.x > width + 10) pt.x = -10;
       });
@@ -73,7 +68,6 @@ function Login() {
       height = canvas.height;
     }
     window.addEventListener("resize", handleResize);
-
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", handleResize);
@@ -83,7 +77,6 @@ function Login() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-
     if (!usuario.trim() || !password.trim()) {
       setError("Completa usuario y contraseña para continuar.");
       return;
@@ -119,7 +112,6 @@ function Login() {
   return (
     <div className="login-page">
       <canvas ref={canvasRef} className="particles-canvas" />
-
       <div className="login-card">
         <div className="login-eyebrow">SISTEMA DE GESTIÓN DE ÓRDENES</div>
         <h1 className="login-title">Iniciar Sesión</h1>
@@ -138,7 +130,6 @@ function Login() {
               maxLength={30}
             />
           </div>
-
           <div className="input-group">
             <label htmlFor="password">Contraseña</label>
             <input
@@ -151,17 +142,17 @@ function Login() {
               maxLength={60}
             />
           </div>
-          <div>
-            <Link to="/register" className="register-link">
-              ¿No tienes cuenta? Regístrate
-            </Link>
-          </div>
 
           {error && <div className="login-error">{error}</div>}
 
           <button type="submit" className="login-button" disabled={isLoading}>
             {isLoading ? "Entrando..." : "Entrar"}
           </button>
+
+          <p className="register-link">
+            ¿No tienes cuenta?{" "}
+            <Link to="/register">Regístrate aquí</Link>
+          </p>
         </form>
       </div>
     </div>

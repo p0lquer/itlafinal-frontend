@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useServiceTypes, useCreateServiceType } from '../hooks/useServiceTypes'
+import { useServiceTypes, useCreateServiceType } from '../hook/useServiceTypes'
+
 
 interface Props {
   value: string
@@ -15,10 +16,32 @@ export function ServiceTypeSelect({ value, onChange }: Props) {
   const { data: serviceTypes, isLoading } = useServiceTypes()
   const createType = useCreateServiceType()
 
+  const existingNames = serviceTypes?.map(st => st.Name.toLowerCase()) || []  
+
   const handleAdd = async () => {
+    try {
+      await createType.mutateAsync({ name: newName.trim(), description: newDesc.trim() })
+      console.log('Nuevo tipo de servicio creado:', newName.trim())
+    }
+     
+    catch (error) {
+      console.error('Error al crear el tipo de servicio:', error)
+    }
+     
     if (!newName.trim()) {
       setAddError('El nombre es requerido')
+    
+      if (newName.trim().length < 3) {
+        setAddError('El nombre debe tener al menos 3 caracteres')
+      }
+
+      if (existingNames.includes(newName.trim().toLowerCase())) {
+        setAddError('Ya existe un tipo de servicio con ese nombre')
+      }
+
+
       return
+   
     }
     setAddError('')
 
@@ -49,9 +72,7 @@ export function ServiceTypeSelect({ value, onChange }: Props) {
           <select
             value={value}
             onChange={e => onChange(e.target.value)}
-            style={styles.select}
           >
-            <option value="">— Selecciona un servicio —</option>
             {serviceTypes?.map(st => (
               <option key={st.ID} value={st.Name}>
                 {st.Name}
@@ -72,13 +93,14 @@ export function ServiceTypeSelect({ value, onChange }: Props) {
 
       {/* Formulario inline para agregar nuevo */}
       {isAdding && (
-        <div style={styles.addBox}>
+        <div className="add-service-type-box">
           <p style={styles.addTitle}>Nuevo tipo de servicio</p>
 
           <input
             style={styles.input}
-            placeholder="Nombre del servicio (ej: Dobladillo)"
+            placeholder="Nombre del servicio (ej: Blanqueamiento)"
             value={newName}
+          
             onChange={e => setNewName(e.target.value)}
             autoFocus
           />
@@ -196,3 +218,5 @@ const styles: Record<string, React.CSSProperties> = {
     fontStyle: 'italic',
   },
 }
+
+export default ServiceTypeSelect

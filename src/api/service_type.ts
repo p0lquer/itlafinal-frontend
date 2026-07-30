@@ -1,13 +1,6 @@
 import client from "./clients";
+import type { ServiceType } from "../types";
 
-
-export interface ServiceType {
-  ID: string
-  Name: string
-  Description: string
-  Created_at: string
-
-}
 
 export const getServiceTypes = async (): Promise<ServiceType[]> => {
   const { data } = await client.get<ServiceType[]>('/service-types')
