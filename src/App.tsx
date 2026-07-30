@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import  Register  from './pages/Register';
+import Login from "./Pages/Login";
+import Dashboard from "./Pages/Dashboard";
+import  Register  from './Pages/Register';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './context/authContext';
 import {ProtectedRoute} from './components/ProtectedRoute';
+import NotFound from "./Pages/404";
 
 const queryClient = new QueryClient()
 
@@ -27,15 +28,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute allowedRole="customer">
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/404" element={<NotFound />} />
+              {/* <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute allowedRole="customer">
+                    <ClientDashboard />
+                  </ProtectedRoute>
+                }
+              /> */}
 
             <Route path="/" element={<Navigate to="/login" replace />} />
           </Routes>

@@ -167,13 +167,6 @@ return (
                 value={form.name} onChange={handleChange} autoComplete="name" />
             </div>
             <div className="input-group">
-              <label htmlFor="phone">
-                Teléfono <span className="register-optional"></span>
-              </label>
-              <input id="phone" name="phone" type="tel" placeholder="809-000-0000"
-                value={form.phone} onChange={handleChange} autoComplete="tel" />
-            </div>
-            <div className="input-group">
               <label htmlFor="email">
                 Correo electrónico <span className="register-optional"></span>
               </label>
@@ -186,6 +179,13 @@ return (
               </label>
               <input id="password" name="password" type="password" placeholder="tu contraseña"
                 value={form.password} onChange={handleChange} autoComplete="new-password" />
+            </div>
+            <div className="input-group">
+              <label htmlFor="phone">
+                Teléfono <span className="register-optional"></span>
+              </label>
+              <input id="phone" name="phone" type="tel" placeholder="809-000-0000"
+                value={form.phone} onChange={handleChange} autoComplete="tel" />
             </div>
 
              {/* Botón discreto para mostrar el campo de clave de operador */}
