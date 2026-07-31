@@ -29,3 +29,8 @@ export async function deleteOrder(orderId: string) {
   const { data } = await client.delete(`/orders/${orderId}`)
   return data
 }
+
+export async function getMyOrders() {
+  const { data } = await client.get<Order[]>('/orders/mine')
+  return data ?? []
+}

@@ -83,10 +83,13 @@ function Dashboard() {
     e.preventDefault();
     setSubmitting(true);
     try {
+      console.log("orderForm:", orderForm);
       await createOrder({
-        ...orderForm,
+        
+       ...orderForm,
         pieces_count: Number(orderForm.pieces_count),
       });
+      
       setShowOrderModal(false);
       setOrderForm({ customer_id: "", notes: "", pieces_count: 1, service_type: "" });
       await loadData();

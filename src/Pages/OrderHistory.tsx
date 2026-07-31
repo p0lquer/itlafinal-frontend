@@ -19,7 +19,13 @@ export default function OrderHistory() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:8080/api/orders", {
+    if (!token) {
+      setError("No se encontró token de autenticación.");
+      setLoading(false);
+      return;
+    }
+
+    fetch("http://localhost:8080/api/orders/mine", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

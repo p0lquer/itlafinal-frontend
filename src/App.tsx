@@ -6,10 +6,12 @@ import OrderHistory from "./Pages/OrderHistory";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './context/authContext';
 import {ProtectedRoute} from './components/ProtectedRoute';
+import DashboardClients from "./Pages/DashboardClients"; 
 import NotFound from "./Pages/404";
 
 const queryClient = new QueryClient()
 
+console.log("App.tsx loaded");
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -28,14 +30,14 @@ function App() {
               }
             />
             <Route path="/404" element={<NotFound />} />
-              {/* <Route
+              <Route
                 path="/dashboard"
                 element={
                   <ProtectedRoute allowedRole="customer">
-                    <ClientDashboard />
+                    <DashboardClients />
                   </ProtectedRoute>
                 }
-              /> */}
+              />
 
             <Route
               path="/historial"

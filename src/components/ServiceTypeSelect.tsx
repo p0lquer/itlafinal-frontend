@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useServiceTypes, useCreateServiceType } from '../hook/useServiceTypes'
 
 
@@ -17,6 +17,12 @@ export function ServiceTypeSelect({ value, onChange }: Props) {
   const createType = useCreateServiceType()
 
   const existingNames = serviceTypes?.map(st => st.Name.toLowerCase()) || []  
+
+  useEffect(() => {
+  if (!value && serviceTypes && serviceTypes.length > 0) {
+    onChange(serviceTypes[0].Name);
+  }
+}, [serviceTypes, value, onChange]);
 
   const handleAdd = async () => {
     try {
@@ -63,7 +69,8 @@ export function ServiceTypeSelect({ value, onChange }: Props) {
   }
 
   if (isLoading) return <p style={{ color: '#888' }}>Cargando servicios...</p>
-
+console.log("serviceTypes:", serviceTypes);
+console.log("value:", value);
   return (
     <div>
       {/* Selector principal */}
@@ -73,6 +80,7 @@ export function ServiceTypeSelect({ value, onChange }: Props) {
             value={value}
             onChange={e => onChange(e.target.value)}
           >
+            <option value="">Seleccione un servicio</option>
             {serviceTypes?.map(st => (
               <option key={st.ID} value={st.Name}>
                 {st.Name}
