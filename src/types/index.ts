@@ -46,6 +46,7 @@ export interface NewOrderPayload {
   notes: string
   pieces_count: number
   service_type: string
+  weight: number
 }
 
 export interface NewCustomerPayload {

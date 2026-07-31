@@ -11,7 +11,7 @@ import {
 } from "../types";
 import {
   createCustomer, createOrder, deleteOrder, getCustomers, getOrders, updateOrderStatus} from "../api/dashboard";
-const ORDER_STATUSES = ["pending", "in_progress", "completed", "cancelled"];
+const ORDER_STATUSES = ["recivida", "procesando", "lista", "cancelada"];
 
 
 
@@ -29,6 +29,7 @@ function Dashboard() {
     notes: "",
     pieces_count: 1,
     service_type: "",
+    weight: 0
   });
   const [customerForm, setCustomerForm] = useState<Omit<NewCustomerPayload, "id">>({
     name: "",
@@ -86,9 +87,10 @@ function Dashboard() {
       await createOrder({
         ...orderForm,
         pieces_count: Number(orderForm.pieces_count),
+        weight: Number(orderForm.weight),
       });
       setShowOrderModal(false);
-      setOrderForm({ customer_id: "", notes: "", pieces_count: 1, service_type: "" });
+      setOrderForm({ customer_id: "", notes: "", pieces_count: 1, service_type: "", weight: 0 });
       await loadData();
     } catch {
       setError("Error al crear la orden.");
@@ -115,9 +117,9 @@ function Dashboard() {
     }
   }
 
-  async function handleStatusChange(orderId: string, newStatus: string) {
+  async function handleStatusChange(orderId: string, status: string) {
     try {
-      await updateOrderStatus(orderId, newStatus);
+      await updateOrderStatus(orderId, status);
       await loadData();
     } catch {
       setError("Error al actualizar el estado de la orden.");
@@ -274,19 +276,23 @@ function Dashboard() {
               </div>
               <div className="input-group">
                 <label>Tipo de servicio</label>
+                
                 <div className="service-type">
+                  <option> Selecciona un tipo de servicio </option>
                 <ServiceTypeSelect
                   value={orderForm.service_type}
                   onChange={(value: string) => setOrderForm({ ...orderForm, service_type: value })}
                 />
                 </div>
-                {/* <input
-                  type="text"
-                  placeholder="Ej: Lavado, Planchado, Seco"
-                  value={orderForm.service_type}
-                  onChange={(e) => setOrderForm({ ...orderForm, service_type: e.target.value })}
+                <div className="input-group">
+                <label>Peso Estimado(lbs)</label>
+                 <input
+                  type="number"
+                  value={orderForm.weight}
+                  onChange={(e) => setOrderForm({ ...orderForm, weight: Number(e.target.value) })}
                   required
-                /> */}
+                /> 
+                </div>
               </div>
               <div className="input-group">
                 <label>Cantidad de piezas</label>
