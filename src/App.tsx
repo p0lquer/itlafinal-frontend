@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./Pages/Login";
-import Dashboard from "./Pages/Dashboard";
-import  Register  from './Pages/Register';
-import OrderHistory from "./Pages/OrderHistory";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Register from './pages/Register';
+import OrderHistory from "./pages/OrderHistory";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './context/authContext';
-import {ProtectedRoute} from './components/ProtectedRoute';
-import DashboardClients from "./Pages/DashboardClients"; 
-import NotFound from "./Pages/404";
+import { ProtectedRoute } from './components/ProtectedRoute';
+import DashboardClients from "./pages/DashboardClients";
+import NotFound from "./pages/404";
 
 const queryClient = new QueryClient()
 

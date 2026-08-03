@@ -15,7 +15,7 @@ interface Particle {
 }
 
 function Login() {
-  const [usuario, setUsuario] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -77,17 +77,17 @@ function Login() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (!usuario.trim() || !password.trim()) {
-      setError("Completa usuario y contraseña para continuar.");
+    if (!email.trim() || !password.trim()) {
+      setError("Completa tu correo y contraseña para continuar.");
       return;
     }
 
     setIsLoading(true);
     try {
-      const data = await login({ email: usuario, password });
+      const data = await login({ email, password });
 
       const user: User = {
-        user_id: "",
+        user_id: data.user_id ?? "",
         name: data.name,
         email: data.email,
         role: data.role,
@@ -119,15 +119,15 @@ function Login() {
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="input-group">
-            <label htmlFor="usuario">Usuario</label>
+            <label htmlFor="email">Correo electrónico</label>
             <input
-              id="usuario"
-              type="text"
-              placeholder="Usuario"
-              value={usuario}
-              onChange={(e) => setUsuario(e.target.value)}
-              autoComplete="username"
-              maxLength={30}
+              id="email"
+              type="email"
+              placeholder="Correo electrónico"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+              maxLength={120}
             />
           </div>
           <div className="input-group">

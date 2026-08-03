@@ -1,40 +1,60 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuthContext } from "../context/authContext";
+import "./NavbarlClient.css";
 
 function NavbarClient() {
   const { user, logout } = useAuthContext();
 
   return (
     <header className="navbar-client">
-
-      <div className="logo">
-        TimeGoBetter
+      {/* Left Side */}
+      <div className="navbar-left">
+        <NavLink to="/dashboard" className="logo">
+          {/* <FaClock /> */}
+          <span className="logo-icon">⏰</span>
+          <span className="logo-text">TimeGoBetter</span>
+        </NavLink>
       </div>
 
-      <nav>
-
-        <Link to="/dashboard">
+      {/* Center */}
+      <nav className="navbar-nav">
+        <NavLink
+          to="/dashboard"
+          className={({ isActive }) =>
+            isActive ? "nav-link active" : "nav-link"
+          }
+        >
           Dashboard
-        </Link>
+        </NavLink>
 
-        <Link to="/historial">
+        <NavLink
+          to="/historial"
+          className={({ isActive }) =>
+            isActive ? "nav-link active" : "nav-link"
+          }
+        >
           Historial
-        </Link>
-
+        </NavLink>
       </nav>
 
-      <div className="user-info">
+      {/* Right Side */}
+      <div className="navbar-user">
+        <div className="user-profile">
+          <div className="avatar">
+            {user?.name?.charAt(0).toUpperCase()}
+          </div>
 
-        <span>
-          Hola, {user?.name}
-        </span>
+          <div className="user-details">
+            <small>Bienvenido</small>
+            <span>{user?.name}</span>
+          </div>
+        </div>
 
-        <button onClick={logout}>
+        <button className="logout-button" onClick={logout}>
+          {/* <FaSignOutAlt /> */}
           Cerrar sesión
         </button>
-
       </div>
-
     </header>
   );
 }

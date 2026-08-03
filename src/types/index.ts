@@ -10,6 +10,7 @@ export interface AuthResponse {
     name: string
     email: string
     role: 'customer' | 'operator'
+    user_id?: string
 }
 
 export interface LoginPayload {
