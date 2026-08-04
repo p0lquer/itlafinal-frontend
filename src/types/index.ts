@@ -38,6 +38,7 @@ export interface Order {
   CustomerID: string
   Status: string
   service_type?: string
+  service_type_id?: string
   ServiceType?: string
   CreatedAt: string
 }
@@ -48,6 +49,7 @@ export interface NewOrderPayload {
   pieces_count: number
   service_type: string
   weight: number
+
 }
 
 export interface NewCustomerPayload {
@@ -62,5 +64,7 @@ export interface ServiceType {
   Name: string
   Description: string
   Created_at: string
-
+  base_price: number
+  price_per_weight: number
+  price_per_piece: number
 }

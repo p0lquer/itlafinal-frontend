@@ -149,13 +149,10 @@ function Dashboard() {
     <div className="dashboard-page">
       <header className="dashboard-header">
         <div>
-          <div className="dashboard-eyebrow">SISTEMA DE GESTIÓN DE ÓRDENES</div>
+          <div className="dashboard-eyebrow">SISTEMA DE GESTIÓN DE ORDENES</div>
           <h1>Panel de Operación</h1>
         </div>
-        <div className="header-actions">
-          {/* <button className="btn-secondary" onClick={() => setShowCustomerModal(true)}>
-            + Nuevo Cliente
-          </button> */}
+        <div className="header-actions"> 
           <button className="btn-primary" onClick={() => setShowOrderModal(true)}>
             + Nueva Orden
           </button>
@@ -195,9 +192,9 @@ function Dashboard() {
           </section>
 
           <section className="dashboard-card">
-            <h2>Órdenes ({orders.length})</h2>
+            <h2>Ordenes ({orders.length})</h2>
             {orders.length === 0 ? (
-              <p className="empty-state">No hay órdenes registradas aún.</p>
+              <p className="empty-state">No hay ordenes registradas aún.</p>
             ) : (
               <table>
                 <thead>
@@ -307,6 +304,7 @@ function Dashboard() {
                   required
                 />
               </div>
+              
               <div className="input-group">
                 <label>Notas</label>
                 <textarea

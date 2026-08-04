@@ -26,7 +26,7 @@ export default function DashboardClients() {
       notes: "",
       pieces_count: 1,
       service_type: "",
-      weight: 0
+      weight: 0,
     });
 
   const visibleOrders = Array.isArray(orders) ? orders : [];
@@ -144,11 +144,11 @@ async function handleCreateOrder(e: React.FormEvent) {
 
         {/* Órdenes recientes */}
         <section className="client-dashboard-card">
-          <h2>Mis Órdenes ({visibleOrders.length})</h2>
+          <h2>Mis Ordenes ({visibleOrders.length})</h2>
           {loading ? (
-            <p className="client-empty-state">Cargando órdenes...</p>
+            <p className="client-empty-state">Cargando ordenes...</p>
           ) : visibleOrders.length === 0 ? (
-            <p className="client-empty-state">Aún no tienes órdenes. ¡Crea la primera!</p>
+            <p className="client-empty-state">Aún no tienes ordenes. ¡Crea la primera!</p>
           ) : (
             <>
               <table className="client-orders-table">

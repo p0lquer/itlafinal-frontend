@@ -11,6 +11,9 @@ export function ServiceTypeSelect({ value, onChange }: Props) {
   const [isAdding, setIsAdding]   = useState(false)
   const [newName, setNewName]     = useState('')
   const [newDesc, setNewDesc]     = useState('')
+  const [newBasePrice, setNewBasePrice] = useState('')
+  const [newPricePerWeight, setNewPricePerWeight] = useState('')
+  const [newPricePerPiece, setNewPricePerPiece] = useState('')
   const [addError, setAddError]   = useState('')
 
   const { data: serviceTypes, isLoading } = useServiceTypes()
@@ -118,6 +121,27 @@ console.log("value:", value);
             placeholder="Descripción (opcional)"
             value={newDesc}
             onChange={e => setNewDesc(e.target.value)}
+          />
+
+          <input
+            style={styles.input}
+            placeholder="Precio base"
+            value={newBasePrice}
+            onChange={e => setNewBasePrice(e.target.value)}
+          />
+
+          <input
+            style={styles.input}
+            placeholder="Precio por peso"
+            value={newPricePerWeight}
+            onChange={e => setNewPricePerWeight(e.target.value)}
+          />
+
+          <input
+            style={styles.input}
+            placeholder="Precio por pieza"
+            value={newPricePerPiece}
+            onChange={e => setNewPricePerPiece(e.target.value)}
           />
 
           {addError && <p style={styles.error}>{addError}</p>}
