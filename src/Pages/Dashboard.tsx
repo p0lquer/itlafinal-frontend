@@ -153,9 +153,9 @@ function Dashboard() {
           <h1>Panel de Operación</h1>
         </div>
         <div className="header-actions">
-          <button className="btn-secondary" onClick={() => setShowCustomerModal(true)}>
+          {/* <button className="btn-secondary" onClick={() => setShowCustomerModal(true)}>
             + Nuevo Cliente
-          </button>
+          </button> */}
           <button className="btn-primary" onClick={() => setShowOrderModal(true)}>
             + Nueva Orden
           </button>

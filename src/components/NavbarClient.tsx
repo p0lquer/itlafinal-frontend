@@ -17,7 +17,7 @@ function NavbarClient() {
       </div>
 
       {/* Center */}
-      <nav className="navbar-nav">
+      {/* <nav className="navbar-nav">
         <NavLink
           to="/dashboard"
           className={({ isActive }) =>
@@ -25,7 +25,7 @@ function NavbarClient() {
           }
         >
           Dashboard
-        </NavLink>
+        </NavLink> */}
 
         {/* <NavLink
           to="/historial"
@@ -35,7 +35,7 @@ function NavbarClient() {
         >
           Historial
         </NavLink> */}
-      </nav>
+      {/* </nav> */}
 
       {/* Right Side */}
       <div className="navbar-user">
