@@ -108,23 +108,10 @@ async function handleCreateOrder(e: React.FormEvent) {
 
   return (
     <div className="client-dashboard-page">
-
+   <header className="client-dashboard-header">
             <NavbarClient />
-              <header className="client-dashboard-header">
-      <div>
-      <div className="client-dashboard-eyebrow">
-        TimeGoBetter System
-      </div>
-
-      <h1>Mi Panel</h1>
-
-      <p className="client-dashboard-subtitle">
-        Bienvenido a tu panel de cliente. Aquí puedes ver tus órdenes recientes y crear nuevas órdenes.
-      </p>
-    </div>
-
+             </header>
     <div className="client-header-actions">
-
       <button
         className="client-btn-primary"
         onClick={() => setShowOrderModal(true)}
@@ -132,10 +119,8 @@ async function handleCreateOrder(e: React.FormEvent) {
       >
         + Nueva Orden
       </button>
-
     </div>
-
-  </header>
+ 
 
       {error && <div className="client-dashboard-error">{error}</div>}
 
@@ -151,9 +136,10 @@ async function handleCreateOrder(e: React.FormEvent) {
             <span className="profile-label">Email</span>
             <span className="profile-value">{user?.email ?? "—"}</span>
           </div>
-        
-
-
+          <div className="profile-row">
+            <span className="profile-label">ID de Cliente</span>
+            <span className="profile-value">{customerId || "—"}</span>
+          </div>
         </section>
 
         {/* Órdenes recientes */}
@@ -167,13 +153,13 @@ async function handleCreateOrder(e: React.FormEvent) {
             <>
               <table className="client-orders-table">
                 <thead className="client-orders-header">
-                  <tr >
+                  <tr  className="client-orders-header-row">
                     <th>Servicio</th>
                     <th>Estado</th>
                     <th>Fecha</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="client-orders-body">
                   {visibleOrders.map((o) => (
                     <tr
                       key={o.ID}

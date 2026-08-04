@@ -1,5 +1,10 @@
 
-
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: #071d15;
+}
 
 .not-found-container {
   display: flex;
@@ -19,3 +24,5 @@
   font-size: 1.5rem;
   margin-bottom: 2rem;
 }
+
+

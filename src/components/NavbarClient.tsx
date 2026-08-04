@@ -27,14 +27,14 @@ function NavbarClient() {
           Dashboard
         </NavLink>
 
-        <NavLink
+        {/* <NavLink
           to="/historial"
           className={({ isActive }) =>
             isActive ? "nav-link active" : "nav-link"
           }
         >
           Historial
-        </NavLink>
+        </NavLink> */}
       </nav>
 
       {/* Right Side */}

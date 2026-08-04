@@ -29,7 +29,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/404" element={<NotFound />} />
+
               <Route
                 path="/dashboard"
                 element={
@@ -47,6 +47,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+           <Route path="*" element={<NotFound />} />
 
             <Route path="/" element={<Navigate to="/login" replace />} />
           </Routes>

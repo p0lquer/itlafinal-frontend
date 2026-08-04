@@ -1,48 +1,61 @@
 import { useEffect, useState } from "react";
 import "./OrderHistory.css";
+import { getMyOrders } from "../api/dashboard";
+import { getMe } from "../api/auth";
+import type { Order } from "../types";
 
-interface Order {
-  id: string;
-  service_type: string;
-  pieces_count: number;
-  notes: string;
-  status: string;
-  created_at: string;
-  estimated_time?: number;
-}
 
 export default function OrderHistory() {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => {
+      const token = localStorage.getItem("token");
+      return token ? true : false;
+  })
   const [error, setError] = useState("");
+  
+ async function loadMyOrders() {
+    try {
+      const data = await getMyOrders();
+      const payload = data as unknown;
+      const normalized = Array.isArray(payload)
+        ? (payload as Order[])
+        : (payload as { orders?: Order[]; data?: Order[]; items?: Order[] } | null)?.orders
+          ?? (payload as { orders?: Order[]; data?: Order[]; items?: Order[] } | null)?.data
+          ?? (payload as { orders?: Order[]; data?: Order[]; items?: Order[] } | null)?.items
+          ?? [];
+
+      setOrders(normalized);
+
+      if (!Array.isArray(payload) && !('orders' in (payload as object) || 'data' in (payload as object) || 'items' in (payload as object))) {
+        setError("El backend devolvió una respuesta inesperada para tus órdenes.");
+      }
+    } catch {
+      setError("No se pudo cargar tu historial de órdenes.");
+    }
+  }
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    let active = true;
 
-    if (!token) {
-      setError("No se encontró token de autenticación.");
-      setLoading(false);
-      return;
-    }
+    (async () => {
+      try {
+        setLoading(true);
+        const me = (await getMe()) as { user_id: string; email: string; role: string };
 
-    fetch("http://localhost:8080/api/orders/mine", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Error al cargar órdenes");
-        return res.json();
-      })
-      .then((data) => {
-  const list = Array.isArray(data) ? data : (data.orders || data.data || []);
-  setOrders(list);
-  setLoading(false);
-})
-      .catch(() => {
-        setError("No se pudo cargar el historial.");
-        setLoading(false);
-      });
+        if (!active) return;
+        setCustomerId(me.user_id || "");
+
+        await loadMyOrders();
+      } catch {
+        if (active) setError("No se pudo conectar con el backend.");
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   const calcCosto = (pieces: number) => `$${(pieces * 50).toFixed(2)}`;
@@ -93,7 +106,7 @@ export default function OrderHistory() {
                       </span>
                     </td>
                     <td>
-                      {new Date(order.created_at).toLocaleDateString("es-DO")}
+                      {new Date(order.created_at).toLocaleDateString("")}
                     </td>
                   </tr>
                 ))}
@@ -105,3 +118,9 @@ export default function OrderHistory() {
     </div>
   );
 }
+
+
+function setCustomerId(arg0: string) {
+  throw new Error("Function not implemented.");
+}
+
