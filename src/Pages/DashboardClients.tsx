@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import "./DashboardClients.css";
 import ServiceTypeSelect from "../components/ServiceTypeSelect";
 import OrderDetailModal from "../components/OrderDetailModal";
@@ -12,7 +12,7 @@ import NavbarClient from "../components/NavbarClient";
 
 export default function DashboardClients() {
   const { user } = useAuthContext();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [customerId, setCustomerId] = useState("");
   const [orders, setOrders] = useState<Order[]>([]);
@@ -177,11 +177,11 @@ async function handleCreateOrder(e: React.FormEvent) {
                   ))}
                 </tbody>
               </table>
-              {visibleOrders.length > 5 && (
+              {/* {visibleOrders.length > 5 && (
                 <button className="client-link-btn" onClick={() => navigate("/historial")}>
                   Ver historial completo →
                 </button>
-              )}
+              )} */}
             </>
           )}
         </section>

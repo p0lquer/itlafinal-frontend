@@ -10,8 +10,8 @@ import {
   type Order 
 } from "../types";
 import {
-  createCustomer, createOrder, deleteOrder, getCustomers, getOrders, updateOrderStatus} from "../api/dashboard";
-const ORDER_STATUSES = ["recivida", "procesando", "lista", "cancelada"];
+  createCustomer, createOrder, getCustomers, getOrders, updateOrderStatus} from "../api/dashboard";
+const ORDER_STATUSES = ["recibida", "en_proceso", "lista", "entregada"];
 
 
 
@@ -129,21 +129,21 @@ function Dashboard() {
     }
   }
 
-  async function handleDeleteOrder(orderId: string) {
-   const reason = prompt("Razon para eliminar la orden (opcional):");
-    if (reason === null) return; // Cancelado por el usuario
-    if (!reason.trim()) {
-      alert("Debes proporcionar una razón para eliminar la orden.");
-      return;
-    }
-    try {
-      await deleteOrder(orderId);
-      await loadData();
+  // async function handleDeleteOrder(orderId: string) {
+  //  const reason = prompt("Razon para eliminar la orden (opcional):");
+  //   if (reason === null) return; // Cancelado por el usuario
+  //   if (!reason.trim()) {
+  //     alert("Debes proporcionar una razón para eliminar la orden.");
+  //     return;
+  //   }
+  //   try {
+  //     await deleteOrder(orderId);
+  //     await loadData();
 
-    } catch {
-      setError("Error al eliminar la orden.");
-    }
-  }
+  //   } catch {
+  //     setError("Error al eliminar la orden.");
+  //   }
+  // }
 
   return (
     <div className="dashboard-page">
@@ -203,7 +203,6 @@ function Dashboard() {
                     <th>Servicio</th>
                     <th>Estado</th>
                     <th>Cambiar</th>
-                    <th>Eliminar</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -235,7 +234,7 @@ function Dashboard() {
                           ))}
                         </select>
                       </td>
-                      <td>
+                      {/* <td>
                         <button
                           className="btn-delete"
                           onClick={(e) => {
@@ -245,7 +244,7 @@ function Dashboard() {
                         >
                           Eliminar
                         </button>
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>

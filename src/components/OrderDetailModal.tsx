@@ -1,16 +1,5 @@
 import { useEffect } from "react";
-
-interface Order {
-  ID: string;
-  CustomerID: string;
-  Status: string;
-  ServiceType?: string;
-  PiecesCount?: number;
-  Notes?: string;
-  EstimatedTime?: number;
-  CreatedAt?: string;
-  ReadyAt?: string | null;
-}
+import type { Order } from "../types";
 
 interface Props {
   order: Order | null;
@@ -106,8 +95,8 @@ export default function OrderDetailModal({ order, onClose }: Props) {
             value={order.CreatedAt ? new Date(order.CreatedAt).toLocaleString() : "—"}
           />
           <Row
-            label="Listo el"
-            value={order.ReadyAt ? new Date(order.ReadyAt).toLocaleString() : "Pendiente"}
+            label="Lista en"
+            value={order.ReadyAt ? new Date(order.ReadyAt).toLocaleString() : "Calculando..."}
           />
         </div>
 

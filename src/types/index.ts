@@ -41,6 +41,11 @@ export interface Order {
   service_type_id?: string
   ServiceType?: string
   CreatedAt: string
+  EstimatedTime: number
+  ReadyAt?: string
+  Notes?: string
+  PiecesCount: number
+  Weight: number
 }
 
 export interface NewOrderPayload {

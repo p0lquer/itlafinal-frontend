@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Register from './pages/Register';
-import OrderHistory from "./pages/OrderHistory";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './context/authContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -39,14 +38,7 @@ function App() {
                 }
               />
 
-            <Route
-              path="/historial"
-              element={
-                <ProtectedRoute allowedRole="customer">
-                  <OrderHistory />
-                </ProtectedRoute>
-              }
-            />
+            
            <Route path="*" element={<NotFound />} />
 
             <Route path="/" element={<Navigate to="/login" replace />} />

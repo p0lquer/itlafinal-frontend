@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useServiceTypes, useCreateServiceType } from '../hook/useServiceTypes'
+import { useAuthContext } from '../context/authContext'
 
 
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export function ServiceTypeSelect({ value, onChange }: Props) {
+  const { user } = useAuthContext()
   const [isAdding, setIsAdding]   = useState(false)
   const [newName, setNewName]     = useState('')
   const [newDesc, setNewDesc]     = useState('')
@@ -15,6 +17,7 @@ export function ServiceTypeSelect({ value, onChange }: Props) {
   const [newPricePerWeight, setNewPricePerWeight] = useState('')
   const [newPricePerPiece, setNewPricePerPiece] = useState('')
   const [addError, setAddError]   = useState('')
+  
 
   const { data: serviceTypes, isLoading } = useServiceTypes()
   const createType = useCreateServiceType()
@@ -90,15 +93,17 @@ console.log("value:", value);
               </option>
             ))}
           </select>
-
-          <button
-            type="button"
-            onClick={() => setIsAdding(true)}
-            style={styles.addBtn}
-            title="Agregar nuevo tipo de servicio"
-          >
-            + Nuevo
-          </button>
+          {}
+          {user?.role === 'operator' && (
+            <button
+              type="button"
+              onClick={() => setIsAdding(true)}
+              style={styles.addBtn}
+              title="Agregar nuevo tipo de servicio"
+            >
+              + Nuevo
+            </button>
+          )}
         </div>
       )}
 
