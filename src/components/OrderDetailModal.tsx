@@ -22,7 +22,7 @@ export default function OrderDetailModal({ order, onClose }: Props) {
     entregada:  "#666",
   };
 
-  const color = statusColor[order.Status] || "#888";
+  const color = statusColor[order.status] || "#888";
 
   return (
     <div
@@ -54,7 +54,7 @@ export default function OrderDetailModal({ order, onClose }: Props) {
               DETALLES DE LA ORDEN
             </p>
             <p style={{ color:"#8aa395", fontSize:12, margin:"4px 0 0", fontFamily:"monospace" }}>
-              {order.ID}
+              {order.id}
             </p>
           </div>
           <button
@@ -68,14 +68,14 @@ export default function OrderDetailModal({ order, onClose }: Props) {
 
         {/* Rows */}
         <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
-          <Row label="Cliente"          value={order.CustomerID} />
-          <Row label="Tipo de servicio" value={order.ServiceType || "—"} />
-          <Row label="Piezas"           value={String(order.PiecesCount ?? "—")} />
-          <Row label="Notas"            value={order.Notes || "—"} />
+          <Row label="Cliente"          value={order.customer_id} />
+          <Row label="Tipo de servicio" value={order.service_type || "—"} />
+          <Row label="Piezas"           value={String(order.pieces_count ?? "—")} />
+          <Row label="Notas"            value={order.notes || "—"} />
           <Row
             label="Tiempo estimado"
-            value={order.EstimatedTime
-              ? `${Math.round(order.EstimatedTime / 1e9 / 60)} minutos`
+            value={order.estimated_time_minutes
+              ? `${Math.round(order.estimated_time_minutes / 60)} minutos`
               : "—"}
           />
           <Row
@@ -86,17 +86,17 @@ export default function OrderDetailModal({ order, onClose }: Props) {
                 padding:"2px 14px", borderRadius:20,
                 fontSize:12, fontWeight:700,
               }}>
-                {order.Status}
+                {order.status}
               </span>
             }
           />
           <Row
             label="Creado"
-            value={order.CreatedAt ? new Date(order.CreatedAt).toLocaleString() : "—"}
+            value={order.created_at ? new Date(order.created_at).toLocaleString() : "—"}
           />
           <Row
             label="Lista en"
-            value={order.ReadyAt ? new Date(order.ReadyAt).toLocaleString() : "Calculando..."}
+            value={order.ready_at ? new Date(order.ready_at).toLocaleString() : "Calculando..."}
           />
         </div>
 

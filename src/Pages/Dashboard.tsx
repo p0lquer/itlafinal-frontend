@@ -10,7 +10,7 @@ import {
   type Order 
 } from "../types";
 import {
-  createCustomer, createOrder, getCustomers, getOrders, updateOrderStatus} from "../api/dashboard";
+  createCustomer, createOrder, deleteOrder, getCustomers, getOrders, updateOrderStatus} from "../api/dashboard";
 const ORDER_STATUSES = ["recibida", "en_proceso", "lista", "entregada"];
 
 
@@ -129,21 +129,21 @@ function Dashboard() {
     }
   }
 
-  // async function handleDeleteOrder(orderId: string) {
-  //  const reason = prompt("Razon para eliminar la orden (opcional):");
-  //   if (reason === null) return; // Cancelado por el usuario
-  //   if (!reason.trim()) {
-  //     alert("Debes proporcionar una razón para eliminar la orden.");
-  //     return;
-  //   }
-  //   try {
-  //     await deleteOrder(orderId);
-  //     await loadData();
+  async function handleDeleteOrder(orderId: string) {
+   const reason = prompt("Razon para eliminar la orden (opcional):");
+    if (reason === null) return; // Cancelado por el usuario
+    if (!reason.trim()) {
+      alert("Debes proporcionar una razón para eliminar la orden.");
+      return;
+    }
+    try {
+      await deleteOrder(orderId);
+      await loadData();
 
-  //   } catch {
-  //     setError("Error al eliminar la orden.");
-  //   }
-  // }
+    } catch {
+      setError("Error al eliminar la orden.");
+    }
+  }
 
   return (
     <div className="dashboard-page">
@@ -208,25 +208,25 @@ function Dashboard() {
                 <tbody>
                   {orders.map((o) => (
                     <tr
-                      key={o.ID}
+                      key={o.id}
                       onClick={() => setSelectedOrder(o)}
                       style={{ cursor: "pointer" }}
                     >
-                      <td>{customers.find(c => c.ID === o.CustomerID)?.Name || o.CustomerID}</td>
-                      <td>{o.ServiceType}</td>
+                      <td>{customers.find(c => c.ID === o.customer_id)?.Name || o.customer_id}</td>
+                      <td>{o.service_type}</td>
                       <td>
-                        <span className={`status-badge status-${o.Status}`}>
-                          {o.Status}
+                        <span className={`status-badge status-${o.status}`}>
+                          {o.status}
                         </span>
                       </td>
                       <td>
                         <select
                           className="status-select"
-                          value={o.Status}
+                          value={o.status}
                           onClick={(e) => e.stopPropagation()}
                           onChange={(e) => {
                             e.stopPropagation();
-                            handleStatusChange(o.ID, e.target.value);
+                            handleStatusChange(o.id, e.target.value);
                           }}
                         >
                           {ORDER_STATUSES.map((s) => (
@@ -234,17 +234,17 @@ function Dashboard() {
                           ))}
                         </select>
                       </td>
-                      {/* <td>
+                      <td>
                         <button
                           className="btn-delete"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleDeleteOrder(o.ID);
+                            handleDeleteOrder(o.id);
                           }}
                         >
                           Eliminar
                         </button>
-                      </td> */}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

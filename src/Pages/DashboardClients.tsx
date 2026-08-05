@@ -162,17 +162,17 @@ async function handleCreateOrder(e: React.FormEvent) {
                 <tbody className="client-orders-body">
                   {visibleOrders.map((o) => (
                     <tr
-                      key={o.ID}
+                      key={o.id}
                       onClick={() => setSelectedOrder(o)}
                       style={{ cursor: "pointer" }}
                     >
-                      <td>{o.ServiceType || "—"}</td>
+                      <td>{o.service_type || "—"}</td>
                       <td>
-                        <span className={`client-status-badge status-${o.Status}`}>
-                          {o.Status}
+                        <span className={`client-status-badge status-${o.status}`}>
+                          {o.status}
                         </span>
                       </td>
-                      <td>{new Date(o.CreatedAt).toLocaleDateString("es-DO")}</td>
+                      <td>{new Date(o.created_at).toLocaleDateString("es-DO")}</td>
                     </tr>
                   ))}
                 </tbody>
