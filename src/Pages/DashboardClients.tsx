@@ -22,11 +22,11 @@ export default function DashboardClients() {
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [orderForm, setOrderForm] = useState<NewOrderPayload>({
-      customer_id: "",
-      notes: "",
-      pieces_count: 1,
-      service_type: "",
-      weight: 0,
+      CustomerID: "",
+      Notes: "",
+      PiecesCount: 1,
+      ServiceType: "",
+      Weight: 0,
     });
 
   const visibleOrders = Array.isArray(orders) ? orders : [];
@@ -88,13 +88,13 @@ async function handleCreateOrder(e: React.FormEvent) {
     try {
       await createOrder({
         ...orderForm,
-        customer_id: customerId,
-        pieces_count: Number(orderForm.pieces_count),
-        weight: Number(orderForm.weight),
+        CustomerID: customerId,
+        PiecesCount: Number(orderForm.PiecesCount),
+        Weight: Number(orderForm.Weight),
       });
 
       setShowOrderModal(false);
-      setOrderForm({ customer_id: customerId, notes: "", pieces_count: 1, service_type: "", weight: 0 });
+      setOrderForm({ CustomerID: customerId, Notes: "", PiecesCount: 1, ServiceType: "", Weight: 0 });
       await loadMyOrders();
     } catch {
       setError("Error al crear la orden.");
@@ -199,16 +199,16 @@ async function handleCreateOrder(e: React.FormEvent) {
                      <div className="service-type">
                        <option> Selecciona un tipo de servicio </option>
                      <ServiceTypeSelect
-                       value={orderForm.service_type}
-                       onChange={(value: string) => setOrderForm({ ...orderForm, service_type: value })}
+                       value={orderForm.ServiceType}
+                       onChange={(value: string) => setOrderForm({ ...orderForm, ServiceType: value })}
                      />
                      </div>
                      <div className="client-input-group">
                      <label>Peso Estimado(lbs)</label>
                       <input
                        type="number"
-                       value={orderForm.weight}
-                       onChange={(e) => setOrderForm({ ...orderForm, weight: Number(e.target.value) })}
+                       value={orderForm.Weight}
+                       onChange={(e) => setOrderForm({ ...orderForm, Weight: Number(e.target.value) })}
                        required
                      /> 
                      </div>
@@ -218,8 +218,8 @@ async function handleCreateOrder(e: React.FormEvent) {
                      <input
                        type="number"
                        min={1}
-                       value={orderForm.pieces_count}
-                       onChange={(e) => setOrderForm({ ...orderForm, pieces_count: Number(e.target.value) })}
+                       value={orderForm.PiecesCount}
+                       onChange={(e) => setOrderForm({ ...orderForm, PiecesCount: Number(e.target.value) })}
                        required
                      />
                    </div>
@@ -227,8 +227,8 @@ async function handleCreateOrder(e: React.FormEvent) {
                      <label>Notas</label>
                      <textarea
                        placeholder="Instrucciones especiales..."
-                       value={orderForm.notes}
-                       onChange={(e) => setOrderForm({ ...orderForm, notes: e.target.value })}
+                       value={orderForm.Notes}
+                       onChange={(e) => setOrderForm({ ...orderForm, Notes: e.target.value })}
                        rows={3}
                      />
                    </div>

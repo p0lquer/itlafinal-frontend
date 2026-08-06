@@ -13,11 +13,11 @@ interface Particle {
   opacity: number;
 }
 interface RegisterForm {
-  name: string;
-  phone: string;
-  email: string;
-  password: string;
-  operator_key?: string;
+  Name: string;
+  Phone: string;
+  Email: string;
+  Password: string;
+  OperatorKey?: string;
 }
 
 
@@ -39,11 +39,11 @@ function Register() {
   const { handleRegister, error: apiError, isLoading } = useAuth()
   const [showOperatorKey, setShowOperatorKey] = useState(false)
     const [form, setForm] = useState<RegisterForm>({
-    name: "",
-    phone: "",
-    email: "",
-    password: "",
-    operator_key: "",
+    Name: "",
+    Phone: "",
+    Email: "",
+    Password: "",
+    OperatorKey: "",
   });
  
 
@@ -111,16 +111,16 @@ function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
   }, []);
 
   function validate(): string | null {
-    if (!form.name.trim()) {
+    if (!form.Name.trim()) {
       return "El nombre es obligatorio.";
     }
-    if (form.email.trim() && !EMAIL_REGEX.test(form.email.trim())) {
+    if (form.Email.trim() && !EMAIL_REGEX.test(form.Email.trim())) {
       return "Correo electrónico no válido.";
     }
-    if (form.phone.trim() && form.phone.replace(/\D/g, "").length < 10) {
+    if (form.Phone.trim() && form.Phone.replace(/\D/g, "").length < 10) {
       return "Número de teléfono incompleto.";
     }
-    if (!form.password || form.password.length < 8) {
+    if (!form.Password || form.Password.length < 8) {
       return "La contraseña debe tener al menos 8 caracteres.";
     }
     return null;
@@ -136,11 +136,11 @@ function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     }
 
         await handleRegister({
-          name: form.name.trim(),
-          phone: form.phone.trim(),
-          email: form.email.trim(),
-          password: form.password,
-          operator_key: form.operator_key || undefined,
+          Name: form.Name.trim(),
+          Phone: form.Phone.trim(),
+          Email: form.Email.trim(),
+          Password: form.Password,
+          OperatorKey: form.OperatorKey || undefined,
         });
   }
         
@@ -164,28 +164,28 @@ return (
                 Nombre completo <span className="register-required">*</span>
               </label>
               <input id="name" name="name" type="text" placeholder="Tu nombre"
-                value={form.name} onChange={handleChange} autoComplete="name" />
+                value={form.Name} onChange={handleChange} autoComplete="name" />
             </div>
             <div className="input-group">
               <label htmlFor="email">
                 Correo electrónico <span className="register-optional"></span>
               </label>
               <input id="email" name="email" type="email" placeholder="correo@mail.com"
-                value={form.email} onChange={handleChange} autoComplete="email" />
+                value={form.Email} onChange={handleChange} autoComplete="email" />
             </div>
             <div className="input-group">
               <label htmlFor="password">
                 Contraseña <span className="register-required">*</span>
               </label>
               <input id="password" name="password" type="password" placeholder="tu contraseña"
-                value={form.password} onChange={handleChange} autoComplete="new-password" />
+                value={form.Password} onChange={handleChange} autoComplete="new-password" />
             </div>
             <div className="input-group">
               <label htmlFor="phone">
                 Teléfono <span className="register-optional"></span>
               </label>
               <input id="phone" name="phone" type="tel" placeholder="809-000-0000"
-                value={form.phone} onChange={handleChange} autoComplete="tel" />
+                value={form.Phone} onChange={handleChange} autoComplete="tel" />
             </div>
 
              {/* Botón discreto para mostrar el campo de clave de operador */}
@@ -203,7 +203,7 @@ return (
               <label htmlFor="operator_key">Clave de operador</label>
               <input id="operator_key" name="operator_key" type="password"
                 placeholder="Ingresa la clave del negocio"
-                value={form.operator_key} onChange={handleChange} />
+                value={form.OperatorKey} onChange={handleChange} />
             </div>
           )}
 

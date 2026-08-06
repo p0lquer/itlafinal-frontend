@@ -25,11 +25,11 @@ function Dashboard() {
   const [showCustomerModal, setShowCustomerModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [orderForm, setOrderForm] = useState<NewOrderPayload>({
-    customer_id: "",
-    notes: "",
-    pieces_count: 1,
-    service_type: "",
-    weight: 0
+    CustomerID: "",
+    Notes: "",
+    PiecesCount: 1,
+    ServiceType: "",
+    Weight: 0
   });
   const [customerForm, setCustomerForm] = useState<Omit<NewCustomerPayload, "id">>({
     name: "",
@@ -88,12 +88,12 @@ function Dashboard() {
       await createOrder({
         
        ...orderForm,
-        pieces_count: Number(orderForm.pieces_count),
-        weight: Number(orderForm.weight),
+        PiecesCount: Number(orderForm.PiecesCount),
+        Weight: Number(orderForm.Weight),
       });
       
       setShowOrderModal(false);
-      setOrderForm({ customer_id: "", notes: "", pieces_count: 1, service_type: "", weight: 0 });
+      setOrderForm({ CustomerID: "", Notes: "", PiecesCount: 1, ServiceType: "", Weight: 0 });
       await loadData();
     } catch {
       setError("Error al crear la orden.");
@@ -263,8 +263,8 @@ function Dashboard() {
               <div className="input-group">
                 <label>Cliente</label>
                 <select
-                  value={orderForm.customer_id}
-                  onChange={(e) => setOrderForm({ ...orderForm, customer_id: e.target.value })}
+                  value={orderForm.CustomerID}
+                  onChange={(e) => setOrderForm({ ...orderForm, CustomerID: e.target.value })}
                   required
                 >
                   <option value="">Selecciona un cliente</option>
@@ -279,16 +279,16 @@ function Dashboard() {
                 <div className="service-type">
                   <option> Selecciona un tipo de servicio </option>
                 <ServiceTypeSelect
-                  value={orderForm.service_type}
-                  onChange={(value: string) => setOrderForm({ ...orderForm, service_type: value })}
+                  value={orderForm.ServiceType}
+                  onChange={(value: string) => setOrderForm({ ...orderForm, ServiceType: value })}
                 />
                 </div>
                 <div className="input-group">
                 <label>Peso Estimado(lbs)</label>
                  <input
                   type="number"
-                  value={orderForm.weight}
-                  onChange={(e) => setOrderForm({ ...orderForm, weight: Number(e.target.value) })}
+                  value={orderForm.Weight}
+                  onChange={(e) => setOrderForm({ ...orderForm, Weight: Number(e.target.value) })}
                   required
                 /> 
                 </div>
@@ -298,8 +298,8 @@ function Dashboard() {
                 <input
                   type="number"
                   min={1}
-                  value={orderForm.pieces_count}
-                  onChange={(e) => setOrderForm({ ...orderForm, pieces_count: Number(e.target.value) })}
+                  value={orderForm.PiecesCount}
+                  onChange={(e) => setOrderForm({ ...orderForm, PiecesCount: Number(e.target.value) })}
                   required
                 />
               </div>
@@ -308,8 +308,8 @@ function Dashboard() {
                 <label>Notas</label>
                 <textarea
                   placeholder="Instrucciones especiales..."
-                  value={orderForm.notes}
-                  onChange={(e) => setOrderForm({ ...orderForm, notes: e.target.value })}
+                  value={orderForm.Notes}
+                  onChange={(e) => setOrderForm({ ...orderForm, Notes: e.target.value })}
                   rows={3}
                 />
               </div>

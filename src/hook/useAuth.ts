@@ -18,15 +18,15 @@ export function useAuth() {
 
             const user: User = {
                 user_id: '',    // viene del token pero lo dejamos vacío por ahora
-                name: data.name,
-                email: data.email,
-                role: data.role,
+                name: data.Name,
+                email: data.Email,
+                role: data.Role,
             }
 
-            saveSession(data.token, user)
+            saveSession(data.Token, user)
 
             // Redirigir según el rol
-            if (data.role === 'operator') {
+            if (data.Role === 'operator') {
                 navigate('/operator')
             } else {
                 navigate('/dashboard')
