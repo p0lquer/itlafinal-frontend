@@ -22,11 +22,11 @@ export function ServiceTypeSelect({ value, onChange }: Props) {
   const { data: serviceTypes, isLoading } = useServiceTypes()
   const createType = useCreateServiceType()
 
-  const existingNames = serviceTypes?.map(st => st.name.toLowerCase()) || []  
+  const existingNames = serviceTypes?.map(st => st.Name.toLowerCase()) || []  
 
   useEffect(() => {
   if (!value && serviceTypes && serviceTypes.length > 0) {
-    onChange(serviceTypes[0].name);
+    onChange(serviceTypes[0].Name);
   }
 }, [serviceTypes, value, onChange]);
 
@@ -49,15 +49,15 @@ const handleAdd = () => {
  
     createType.mutate(
       {
-        name: trimmedName,
-        description: newDesc.trim(),
-        base_price: parseFloat(newBasePrice) || 0,
-        price_per_weight: parseFloat(newPricePerWeight) || 0,
-        price_per_piece: parseFloat(newPricePerPiece) || 0,
+        Name: trimmedName,
+        Description: newDesc.trim(),
+        BasePrice: parseFloat(newBasePrice) || 0,
+        PricePerWeight: parseFloat(newPricePerWeight) || 0,
+        PricePerPiece: parseFloat(newPricePerPiece) || 0,
       },
       {
         onSuccess: (created) => {
-          onChange(created.name) // seleccionar automáticamente el nuevo
+          onChange(created.Name) // seleccionar automáticamente el nuevo
           setNewName('')
           setNewDesc('')
           setNewBasePrice('')
@@ -88,8 +88,8 @@ console.log("value:", value);
           >
             <option value="">Seleccione un servicio</option>
             {serviceTypes?.map(st => (
-              <option key={st.id} value={st.name}>
-                {st.name}
+              <option key={st.ID} value={st.Name}>
+                {st.Name}
               </option>
             ))}
           </select>
@@ -174,7 +174,7 @@ console.log("value:", value);
       {/* Mostrar descripción del tipo seleccionado */}
       {value && !isAdding && (
         <p style={styles.hint}>
-          {serviceTypes?.find(st => st.name === value)?.description}
+          {serviceTypes?.find(st => st.Name === value)?.Description}
         </p>
       )}
     </div>

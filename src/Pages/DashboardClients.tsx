@@ -105,7 +105,7 @@ async function handleCreateOrder(e: React.FormEvent) {
 
 
 
-
+console.log(customerId);
   return (
     <div className="client-dashboard-page">
    <header className="client-dashboard-header">
