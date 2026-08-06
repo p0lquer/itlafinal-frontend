@@ -42,7 +42,7 @@ export interface Order {
   PiecesCount: number
   Weight: number
   price: number
-  estimated_time_minutes: number
+  EstimatedTime: number
   CreatedAt: string
   updated_at: string
   ReadyAt?: string
