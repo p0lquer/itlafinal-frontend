@@ -162,17 +162,17 @@ async function handleCreateOrder(e: React.FormEvent) {
                 <tbody className="client-orders-body">
                   {visibleOrders.map((o) => (
                     <tr
-                      key={o.id}
+                      key={o.ID}
                       onClick={() => setSelectedOrder(o)}
                       style={{ cursor: "pointer" }}
                     >
-                      <td>{o.service_type || "—"}</td>
+                      <td>{o.ServiceType || "—"}</td>
                       <td>
-                        <span className={`client-status-badge status-${o.status}`}>
-                          {o.status}
+                        <span className={`client-status-badge status-${o.Status}`}>
+                          {o.Status}
                         </span>
                       </td>
-                      <td>{new Date(o.created_at).toLocaleDateString("es-DO")}</td>
+                      <td>{new Date(o.CreatedAt).toLocaleDateString("es-DO")}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -189,11 +189,11 @@ async function handleCreateOrder(e: React.FormEvent) {
 
       {/* Modal Nueva Orden */}
          {showOrderModal && (
-             <div className="modal-overlay" onClick={() => setShowOrderModal(false)}>
-               <div className="modal" onClick={(e) => e.stopPropagation()}>
+             <div className="client-modal-overlay" onClick={() => setShowOrderModal(false)}>
+               <div className="client-modal" onClick={(e) => e.stopPropagation()}>
                  <h2>Nueva Orden</h2>
-                 <form onSubmit={handleCreateOrder} className="modal-form">
-                   <div className="input-group">
+                 <form onSubmit={handleCreateOrder} className="client-modal-form">
+                   <div className="client-input-group">
                      <label>Tipo de servicio</label>
                      
                      <div className="service-type">
@@ -203,7 +203,7 @@ async function handleCreateOrder(e: React.FormEvent) {
                        onChange={(value: string) => setOrderForm({ ...orderForm, service_type: value })}
                      />
                      </div>
-                     <div className="input-group">
+                     <div className="client-input-group">
                      <label>Peso Estimado(lbs)</label>
                       <input
                        type="number"
@@ -213,7 +213,7 @@ async function handleCreateOrder(e: React.FormEvent) {
                      /> 
                      </div>
                    </div>
-                   <div className="input-group">
+                   <div className="client-input-group">
                      <label>Cantidad de piezas</label>
                      <input
                        type="number"
@@ -223,7 +223,7 @@ async function handleCreateOrder(e: React.FormEvent) {
                        required
                      />
                    </div>
-                   <div className="input-group">
+                   <div className="client-input-group">
                      <label>Notas</label>
                      <textarea
                        placeholder="Instrucciones especiales..."
@@ -232,7 +232,7 @@ async function handleCreateOrder(e: React.FormEvent) {
                        rows={3}
                      />
                    </div>
-                   <div className="modal-actions">
+                   <div className="client-modal-actions">
                      <button type="button" className="client-btn-secondary" onClick={() => setShowOrderModal(false)}>
                        Cancelar
                      </button>

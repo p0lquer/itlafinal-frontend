@@ -34,18 +34,20 @@ export interface Customer {
 }
 
 export interface Order {
-  id: string
-  customer_id: string
-  service_type: string
-  status: string
-  pieces_count: number
-  weight: number
+  ID: string
+  CustomerID: string
+  Status: string
+  ServiceType?: string
+  service_type_id?: string
+  PiecesCount: number
+  Weight: number
   price: number
-  notes: string
   estimated_time_minutes: number
-  created_at: string
+  CreatedAt: string
   updated_at: string
-  ready_at?: string | null
+  ReadyAt?: string
+  Notes?: string
+
 }
 
 export interface NewOrderPayload {

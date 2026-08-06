@@ -208,25 +208,25 @@ function Dashboard() {
                 <tbody>
                   {orders.map((o) => (
                     <tr
-                      key={o.id}
+                      key={o.ID}
                       onClick={() => setSelectedOrder(o)}
                       style={{ cursor: "pointer" }}
                     >
-                      <td>{customers.find(c => c.ID === o.customer_id)?.Name || o.customer_id}</td>
-                      <td>{o.service_type}</td>
+                      <td>{customers.find(c => c.ID === o.CustomerID)?.Name || o.CustomerID}</td>
+                      <td>{o.ServiceType}</td>
                       <td>
-                        <span className={`status-badge status-${o.status}`}>
-                          {o.status}
+                        <span className={`status-badge status-${o.Status}`}>
+                          {o.Status}
                         </span>
                       </td>
                       <td>
                         <select
                           className="status-select"
-                          value={o.status}
+                          value={o.Status}
                           onClick={(e) => e.stopPropagation()}
                           onChange={(e) => {
                             e.stopPropagation();
-                            handleStatusChange(o.id, e.target.value);
+                            handleStatusChange(o.ID, e.target.value);
                           }}
                         >
                           {ORDER_STATUSES.map((s) => (
@@ -239,7 +239,7 @@ function Dashboard() {
                           className="btn-delete"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleDeleteOrder(o.id);
+                            handleDeleteOrder(o.ID);
                           }}
                         >
                           Eliminar
