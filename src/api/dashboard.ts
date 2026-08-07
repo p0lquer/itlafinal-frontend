@@ -11,8 +11,15 @@ export async function getOrders() {
 }
 
 export async function createOrder(payload: NewOrderPayload) {
-  const { data } = await client.post('/orders', payload)
-  return data
+  const { data } = await client.post("/orders", {
+    customer_id: payload.CustomerID,
+    service_type: payload.ServiceType,
+    pieces_count: Number(payload.PiecesCount),
+    weight: Number(payload.Weight),
+    notes: payload.Notes,
+  });
+
+  return data;
 }
 
 export async function createCustomer(payload: NewCustomerPayload) {

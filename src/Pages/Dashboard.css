@@ -261,6 +261,11 @@ tbody td {
 }
 
 .btn-delete {
+  position: relative;
+  z-index: 10;
+
+  pointer-events: auto;
+
   padding: 8px 16px;
   background: rgba(217, 123, 58, 0.12);
   color: #d97b3a;
@@ -272,6 +277,10 @@ tbody td {
   cursor: pointer;
   transition: background-color 0.15s ease, box-shadow 0.15s ease;
 }
+.btn-delete:hover {
+  background: rgba(217, 123, 58, 0.22);
+}
+
 .status-select {
   background: #11211a;
   border: 1px solid rgba(74, 222, 158, 0.2);

@@ -83,24 +83,62 @@ function Dashboard() {
   async function handleCreateOrder(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
+    console.log("========== CREATE ORDER ==========");
+  console.log("CustomerID:", customers.find(c => c.ID === orderForm.CustomerID)?.ID);
+  console.log("ServiceType:", orderForm.ServiceType);
+  console.log("PiecesCount:", orderForm.PiecesCount);
+  console.log("Weight:", orderForm.Weight);
+  console.log("==================================");
+
+  if (!customers.find(c => c.ID === orderForm.CustomerID)) {
+    setError("No se pudo identificar al cliente autenticado.");
+    return;
+  }
+
+  if (!orderForm.ServiceType) {
+    setError("Debes seleccionar un tipo de servicio.");
+    return;
+  }
+
+  if (orderForm.PiecesCount < 1) {
+    setError("La cantidad de piezas debe ser al menos 1.");
+    return;
+  }
+
+  setSubmitting(true);
+  setError("");
     try {
-      console.log("orderForm:", orderForm);
-      await createOrder({
-        
-       ...orderForm,
-        PiecesCount: Number(orderForm.PiecesCount),
-        Weight: Number(orderForm.Weight),
-      });
+      const payload: NewOrderPayload = {
+      CustomerID: customers.find(c => c.ID === orderForm.CustomerID)?.ID || "",
+      Notes: orderForm.Notes,
+      PiecesCount: Number(orderForm.PiecesCount),
+      ServiceType: orderForm.ServiceType,
+      Weight: Number(orderForm.Weight),
+    };
+   console.log("🚨 PAYLOAD BEING SENT:", payload);
+      await createOrder(payload);
       
       setShowOrderModal(false);
+      
       setOrderForm({ CustomerID: "", Notes: "", PiecesCount: 1, ServiceType: "", Weight: 0 });
       await loadData();
-    } catch {
-      setError("Error al crear la orden.");
-    } finally {
-      setSubmitting(false);
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+  console.error("❌ CREATE ORDER ERROR:", error);
+
+  console.log("STATUS:", error.response?.status);
+  console.log("BACKEND RESPONSE:", error.response?.data);
+  console.log("SENT DATA:", error.config?.data);
+
+  setError(
+    error.response?.data?.message ||
+    "Error al crear la orden."
+  );
+}
+   finally {
+    setSubmitting(false);
   }
+}
 
   async function handleCreateCustomer(e: React.FormEvent) {
     e.preventDefault();
@@ -130,12 +168,7 @@ function Dashboard() {
   }
 
   async function handleDeleteOrder(orderId: string) {
-   const reason = prompt("Razon para eliminar la orden (opcional):");
-    if (reason === null) return; // Cancelado por el usuario
-    if (!reason.trim()) {
-      alert("Debes proporcionar una razón para eliminar la orden.");
-      return;
-    }
+   
     try {
       await deleteOrder(orderId);
       await loadData();
@@ -149,7 +182,7 @@ function Dashboard() {
     <div className="dashboard-page">
       <header className="dashboard-header">
         <div>
-          <div className="dashboard-eyebrow">SISTEMA DE GESTIÓN DE ORDENES</div>
+          <div className="dashboard-eyebrow">TIMEGOBETTER</div>
           <h1>Panel de Operación</h1>
         </div>
         <div className="header-actions"> 
@@ -238,9 +271,13 @@ function Dashboard() {
                         <button
                           className="btn-delete"
                           onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteOrder(o.ID);
-                          }}
+  e.preventDefault();
+  e.stopPropagation();
+
+  console.log("DELETE:", o.ID);
+
+  handleDeleteOrder(o.ID);
+}}
                         >
                           Eliminar
                         </button>

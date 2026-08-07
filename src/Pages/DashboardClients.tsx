@@ -59,10 +59,14 @@ export default function DashboardClients() {
     (async () => {
       try {
         setLoading(true);
-        const me = (await getMe()) as { user_id: string; email: string; role: string };
+        const me = await getMe();
 
-        if (!active) return;
-        setCustomerId(me.user_id || "");
+console.log("🔥 GET ME RESPONSE:", me);
+
+setCustomerId(me.user_id || "");
+
+        // if (!active) return;
+        // setCustomerId(me.user_id || "");
 
         await loadMyOrders();
       } catch {
@@ -86,6 +90,11 @@ async function handleCreateOrder(e: React.FormEvent) {
 
     setSubmitting(true);
     try {
+      console.log("🚨 FINAL VALUES");
+console.log("CustomerID =", customerId);
+console.log("ServiceType =", orderForm.ServiceType);
+console.log("PiecesCount =", orderForm.PiecesCount);
+console.log("Weight =", orderForm.Weight);
       await createOrder({
         ...orderForm,
         CustomerID: customerId,
@@ -177,11 +186,6 @@ console.log(customerId);
                   ))}
                 </tbody>
               </table>
-              {/* {visibleOrders.length > 5 && (
-                <button className="client-link-btn" onClick={() => navigate("/historial")}>
-                  Ver historial completo →
-                </button>
-              )} */}
             </>
           )}
         </section>
