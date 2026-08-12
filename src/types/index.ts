@@ -94,6 +94,17 @@ export interface PaymentReceipt extends PaymentSummary {
   payment_method: PaymentMethod
 }
 
+export interface PaymentRecord {
+  id: string
+  order_id: string
+  amount: number
+  currency: string
+  method: PaymentMethod
+  status: 'paid'
+  receipt_number: string
+  paid_at: string
+}
+
 export type UserRole = 'customer' | 'operator' | 'admin'
 
 export interface AdminUser {

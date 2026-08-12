@@ -227,6 +227,9 @@
 .client-pagination button:disabled { cursor: not-allowed; opacity: .42; }
 .client-order-action { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
 .client-order-action .client-pay-order { background: var(--accent, #2de18e); color: #042113; border: 0; border-radius: 7px; padding: 7px 11px; font-weight: 800; }
+.client-payment-history { margin-top: 24px; padding: 24px; border: 1px solid var(--client-border); border-radius: 16px; background: var(--client-surface); display: grid; gap: 18px; }
+.client-payment-history h2 { margin: 4px 0; font-size: 1.25rem; }.client-payment-history p { margin: 0; color: var(--client-muted); }
+.client-payment-list { display: grid; gap: 8px; }.client-payment-list article { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 16px; padding: 13px 0; border-top: 1px solid var(--client-border); }.client-payment-list article div { display: grid; gap: 4px; min-width: 0; }.client-payment-list span { color: var(--client-muted); font-size: .78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }.client-payment-list b { color: var(--client-primary-soft); }.client-payment-list button { border: 1px solid var(--client-primary); border-radius: 8px; color: var(--client-primary-soft); background: transparent; padding: 7px 10px; font: inherit; font-size: .8rem; font-weight: 800; cursor: pointer; }
 
 .client-dashboard-page :is(button, input, select, textarea):focus-visible,
 .client-order-row:focus-visible { outline: 3px solid rgba(82, 227, 155, .48); outline-offset: 3px; }
@@ -253,6 +256,7 @@
   .client-pagination { justify-content: center; gap: 6px; font-size: 11px; }
   .client-pagination button { min-width: 32px; min-height: 32px; }
   .client-current-order { padding: 20px 16px; }
+  .client-payment-history { padding: 18px 16px; }.client-payment-list article { grid-template-columns: 1fr auto; gap: 9px; }.client-payment-list button { grid-column: 1 / -1; width: 100%; }
   .client-order-progress { min-width: 0; width: 100%; }
 }
 

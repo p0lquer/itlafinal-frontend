@@ -1,5 +1,5 @@
 import client from './clients'
-import type { PaymentMethod, PaymentReceipt, PaymentSummary } from '../types'
+import type { PaymentMethod, PaymentReceipt, PaymentRecord, PaymentSummary } from '../types'
 
 /** Resumen que se muestra antes de cobrar una orden lista para retiro. */
 export async function getPaymentSummary(orderId: string) {
@@ -11,4 +11,9 @@ export async function getPaymentSummary(orderId: string) {
 export async function payOrder(orderId: string, method: PaymentMethod) {
   const { data } = await client.post<PaymentReceipt>(`/orders/${orderId}/payments`, { method })
   return data
+}
+
+export async function getPaymentHistory() {
+  const { data } = await client.get<{ data: PaymentRecord[] }>('/payments/mine')
+  return data.data
 }

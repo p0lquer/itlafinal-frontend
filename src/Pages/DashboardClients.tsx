@@ -8,7 +8,8 @@ import ThemeToggle from "../components/ThemeToggle";
 import { useAuthContext } from "../context/authContext";
 import { getMe } from "../api/auth";
 import { createOrder, getMyOrders } from "../api/dashboard";
-import type { NewOrderPayload, Order } from "../types";
+import { getPaymentHistory } from "../api/payments";
+import type { NewOrderPayload, Order, PaymentRecord } from "../types";
 import { normalizeNotes, normalizeSingleLine, validateOrder } from "../lib/inputValidation";
 
 const ORDER_STEPS = ["recibida", "en_proceso", "lista", "entregada"] as const;
@@ -144,6 +145,7 @@ export default function DashboardClients() {
   const { user, token, logout } = useAuthContext();
   const [customerId, setCustomerId] = useState("");
   const [orders, setOrders] = useState<Order[]>([]);
+  const [payments, setPayments] = useState<PaymentRecord[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -204,6 +206,10 @@ export default function DashboardClients() {
     }
   }, []);
 
+  const loadPaymentHistory = useCallback(async () => {
+    try { setPayments(await getPaymentHistory()); } catch { setPayments([]); }
+  }, []);
+
   useEffect(() => {
     let active = true;
 
@@ -217,7 +223,7 @@ export default function DashboardClients() {
         const resolvedCustomerId = me.user_id || "";
         setCustomerId(resolvedCustomerId);
         resetOrderForm(resolvedCustomerId);
-        await loadMyOrders();
+        await Promise.all([loadMyOrders(), loadPaymentHistory()]);
       } catch {
         if (active) setError("No pudimos identificar tu sesión. Actualiza la página o inicia sesión nuevamente.");
       } finally {
@@ -226,7 +232,7 @@ export default function DashboardClients() {
     })();
 
     return () => { active = false; };
-  }, [loadMyOrders, resetOrderForm]);
+  }, [loadMyOrders, loadPaymentHistory, resetOrderForm]);
 
   useEffect(() => {
     if (!token) return undefined;
@@ -460,6 +466,7 @@ export default function DashboardClients() {
           </div>
 
           {!loading && orders.length > 0 && <section className="client-current-order" aria-label="Seguimiento del estado de una orden"><div><p className="client-eyebrow">SEGUIMIENTO</p><h2>El estado se actualiza automáticamente</h2><p>Te notificaremos cuando una orden esté lista para retirar o sea entregada.</p></div><OrderStatusTimeline status={orders.find((order) => !["entregada"].includes(order.Status.toLowerCase()))?.Status ?? "entregada"} /></section>}
+          {!loading && payments.length > 0 && <section className="client-payment-history" aria-label="Historial de pagos"><div><p className="client-eyebrow">COMPROBANTES</p><h2>Historial de pagos</h2><p>Consulta y vuelve a descargar una factura cuando lo necesites.</p></div><div className="client-payment-list">{payments.slice(0, 5).map((payment) => <article key={payment.id}><div><strong>{payment.receipt_number}</strong><span>{formatOrderDate(payment.paid_at, true)} · Orden {shortOrderId(payment.order_id)}</span></div><b>{new Intl.NumberFormat("es-DO", { style: "currency", currency: payment.currency || "DOP" }).format(payment.amount)}</b><button type="button" onClick={() => navigate(`/checkout/${payment.order_id}`)}>Ver factura</button></article>)}</div></section>}
         </main>
 
         <footer className="client-dashboard-footer"><div className="client-footer-inner"><div className="client-footer-copy">© {new Date().getFullYear()} TimeGoBetter. Gestión de órdenes de lavandería.</div><div className="client-footer-links"><a href="mailto:soporte@timegobetter.com">Soporte</a><button type="button" onClick={() => { void loadMyOrders(); }}>Actualizar historial</button></div></div></footer>
