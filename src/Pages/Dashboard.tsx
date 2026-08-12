@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./Dashboard.css";
 import OrderDetailModal from "../components/OrderDetailModal";
 import  ServiceTypeSelect  from  "../components/ServiceTypeSelect";
+import { useAuthContext } from "../context/authContext";
 import {
   
   type Customer, 
@@ -16,6 +17,7 @@ const ORDER_STATUSES = ["recibida", "en_proceso", "lista", "entregada"];
 
 
 function Dashboard() {
+  const { logout } = useAuthContext();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -92,16 +94,19 @@ function Dashboard() {
 
   if (!customers.find(c => c.ID === orderForm.CustomerID)) {
     setError("No se pudo identificar al cliente autenticado.");
+    setSubmitting(false);
     return;
   }
 
   if (!orderForm.ServiceType) {
     setError("Debes seleccionar un tipo de servicio.");
+    setSubmitting(false);
     return;
   }
 
   if (orderForm.PiecesCount < 1) {
     setError("La cantidad de piezas debe ser al menos 1.");
+    setSubmitting(false);
     return;
   }
 
@@ -180,12 +185,24 @@ function Dashboard() {
 
   return (
     <div className="dashboard-page">
+      <nav className="operator-nav" aria-label="Navegación de operador">
+        <div className="operator-nav-info">
+          <span className="operator-brand">TimeGoBetter</span>
+          <span className="operator-nav-label">Operación</span>
+        </div>
+        <button type="button" className="btn-logout" onClick={logout}>
+          Cerrar sesión
+        </button>
+      </nav>
       <header className="dashboard-header">
         <div>
           <div className="dashboard-eyebrow">TIMEGOBETTER</div>
           <h1>Panel de Operación</h1>
         </div>
         <div className="header-actions"> 
+          <button className="btn-secondary" onClick={() => setShowCustomerModal(true)}>
+            + Nuevo Cliente
+          </button>
           <button className="btn-primary" onClick={() => setShowOrderModal(true)}>
             + Nueva Orden
           </button>
@@ -198,12 +215,12 @@ function Dashboard() {
         <p className="dashboard-loading">Cargando datos...</p>
       ) : (
         <div className="dashboard-grid">
-          <section className="dashboard-card">
+          <section className="dashboard-card customers-card">
             <h2>Clientes ({customers.length})</h2>
             {customers.length === 0 ? (
               <p className="empty-state">No hay clientes registrados aún.</p>
             ) : (
-              <table>
+              <div className="table-scroll"><table>
                 <thead>
                   <tr>
                     <th>Nombre</th>
@@ -220,16 +237,16 @@ function Dashboard() {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
             )}
           </section>
 
-          <section className="dashboard-card">
+          <section className="dashboard-card orders-card">
             <h2>Ordenes ({orders.length})</h2>
             {orders.length === 0 ? (
               <p className="empty-state">No hay ordenes registradas aún.</p>
             ) : (
-              <table>
+              <div className="table-scroll"><table>
                 <thead>
                   <tr>
                     <th>Cliente</th>
@@ -285,7 +302,7 @@ function Dashboard() {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table></div>
             )}
           </section>
         </div>
@@ -314,7 +331,6 @@ function Dashboard() {
                 <label>Tipo de servicio</label>
                 
                 <div className="service-type">
-                  <option> Selecciona un tipo de servicio </option>
                 <ServiceTypeSelect
                   value={orderForm.ServiceType}
                   onChange={(value: string) => setOrderForm({ ...orderForm, ServiceType: value })}

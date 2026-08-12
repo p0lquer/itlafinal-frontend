@@ -18,6 +18,14 @@
   backdrop-filter: blur(10px);
 
   box-sizing: border-box;
+  animation: pageSlideUp .48s var(--ease-standard);
+  transition: transform var(--motion-base) var(--ease-soft), border-color var(--motion-fast) var(--ease-soft), box-shadow var(--motion-base) var(--ease-soft);
+}
+
+.navbar-client:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 255, 170, 0.25);
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.2);
 }
 
 /* LEFT */
@@ -36,6 +44,7 @@
 
 .logo-icon {
   font-size: 1.5rem;
+  animation: softFloat 3.6s ease-in-out infinite;
 }
 
 .logo:hover {
@@ -106,6 +115,12 @@
 
   color: white;
   font-weight: bold;
+  transition: transform var(--motion-fast) var(--ease-soft), box-shadow var(--motion-base) var(--ease-soft);
+}
+
+.user-profile:hover .avatar {
+  transform: scale(1.06);
+  box-shadow: 0 0 0 6px rgba(54, 211, 153, 0.1);
 }
 
 .user-details {

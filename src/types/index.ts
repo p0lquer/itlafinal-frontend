@@ -6,24 +6,24 @@ export interface User {
 }
 
 export interface AuthResponse {
-    Token: string
-    Name: string
-    Email: string
-    Role: 'customer' | 'operator'
+    token: string
+    name: string
+    email: string
+    role: 'customer' | 'operator'
     user_id?: string
 }
 
 export interface LoginPayload {
-    Email: string
-    Password: string
+    email: string
+    password: string
 }
 
 export interface RegisterPayload {
-    Name: string
-    Email: string
-    Password: string
-    Phone?: string
-    OperatorKey?: string
+    name: string
+    email: string
+    password: string
+    phone?: string
+    operator_key?: string
 }
 
 export interface Customer {
@@ -67,10 +67,12 @@ export interface NewCustomerPayload {
 }
 
 export interface ServiceType {
-  ID: number
+  id: number
+  name: string
+  description: string
+  base_price: number
+  price_per_weight: number
+  price_per_piece: number
+  /** Compatibilidad temporal para el callback existente del selector. */
   Name: string
-  Description: string
-  BasePrice: number
-  PricePerWeight: number
-  PricePerPiece: number
 }

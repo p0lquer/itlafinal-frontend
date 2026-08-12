@@ -25,10 +25,12 @@
   color: var(--accent-bright);
   text-decoration: none;
   font-weight: 600;
+  transition: color var(--motion-fast) var(--ease-soft), opacity var(--motion-fast) var(--ease-soft), transform var(--motion-fast) var(--ease-soft);
 }
 
 .register-link a:hover {
   text-decoration: underline;
+  transform: translateY(-1px);
 }
 
 .register-success {
@@ -37,7 +39,7 @@
   align-items: center;
   gap: 8px;
   padding: 32px 0 16px;
-  animation: cardRise 0.4s ease-out;
+  animation: cardRise 0.4s var(--ease-standard);
 }
 
 .register-success-icon {
@@ -51,6 +53,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: softFloat 3.4s ease-in-out infinite;
 }
 
 .register-success p {
@@ -73,6 +76,11 @@
   font-size: 13px;
   cursor: pointer;
   margin-bottom: 12px;
+  transition: color var(--motion-fast) var(--ease-soft), transform var(--motion-fast) var(--ease-soft);
+}
+
+.toggle-operator-key-btn:hover {
+  transform: translateX(2px);
 }
 
 .success-modal {
@@ -81,6 +89,7 @@
   border-radius: 16px;
   padding: 32px;
   width: 370px;
+  animation: pageSlideUp .28s var(--ease-standard);
 }
 
 .success-modal p {

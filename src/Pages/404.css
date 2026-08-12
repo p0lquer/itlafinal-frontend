@@ -1,11 +1,3 @@
-
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  background: #071d15;
-}
-
 .not-found-container {
   display: flex;
   flex-direction: column;
@@ -13,16 +5,22 @@
   justify-content: center;
   height: 100vh;
   text-align: center;
+  background: radial-gradient(circle at top, #103123 0%, #071d15 55%, #040907 100%);
+  color: #f3f7f4;
+  animation: pageSlideUp .45s var(--ease-standard);
 }
 
 .not-found-title {
   font-size: 6rem;
   margin-bottom: 1rem;
+  color: #56ffa8;
+  text-shadow: 0 0 24px rgba(86, 255, 168, 0.18);
 }
 
 .not-found-message {
   font-size: 1.5rem;
   margin-bottom: 2rem;
+  color: #b9cbbc;
 }
 
 

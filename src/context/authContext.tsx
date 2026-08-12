@@ -23,11 +23,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const savedUser  = localStorage.getItem('user')
 
     if (savedToken && savedUser) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setToken(savedToken)
-      setUser(JSON.parse(savedUser))
+      try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setToken(savedToken)
+        setUser(JSON.parse(savedUser))
+      } catch {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+      }
     }
     setIsLoading(false)
+  }, [])
+
+  useEffect(() => {
+    const clearExpiredSession = () => {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      setToken(null)
+      setUser(null)
+    }
+    window.addEventListener('auth:unauthorized', clearExpiredSession)
+    return () => window.removeEventListener('auth:unauthorized', clearExpiredSession)
   }, [])
 
   const saveSession = (newToken: string, newUser: User) => {
