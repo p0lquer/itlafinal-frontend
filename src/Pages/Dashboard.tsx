@@ -16,6 +16,7 @@ import {
 } from "../api/dashboard";
 
 const ORDER_STATUSES = ["recibida", "en_proceso", "lista", "entregada"] as const;
+const PAGE_SIZE = 5;
 
 const STATUS_LABELS: Record<string, string> = {
   recibida: "Recibida",
@@ -139,6 +140,7 @@ function Dashboard() {
     service: "",
     date: "",
   });
+  const [ordersPage, setOrdersPage] = useState(1);
   const [orderForm, setOrderForm] = useState<NewOrderPayload>({
     CustomerID: "",
     Notes: "",
@@ -228,6 +230,10 @@ function Dashboard() {
         return secondDate - firstDate;
       });
   }, [customersById, filters, orders]);
+
+  const totalOrderPages = Math.max(1, Math.ceil(visibleOrders.length / PAGE_SIZE));
+  const currentOrdersPage = Math.min(ordersPage, totalOrderPages);
+  const paginatedOrders = visibleOrders.slice((currentOrdersPage - 1) * PAGE_SIZE, currentOrdersPage * PAGE_SIZE);
 
   const metrics = useMemo(() => {
     const today = toDateInputValue(new Date().toISOString());
@@ -380,6 +386,7 @@ function Dashboard() {
 
   function resetFilters() {
     setFilters({ search: "", status: "", service: "", date: "" });
+    setOrdersPage(1);
   }
 
   function exportVisibleOrders() {
@@ -502,13 +509,13 @@ function Dashboard() {
                       type="search"
                       placeholder="Buscar por cliente, correo u orden"
                       value={filters.search}
-                      onChange={(event) => setFilters((current) => ({ ...current, search: event.target.value }))}
+                      onChange={(event) => { setOrdersPage(1); setFilters((current) => ({ ...current, search: event.target.value })); }}
                     />
                   </label>
                   <select
                     aria-label="Filtrar por estado"
                     value={filters.status}
-                    onChange={(event) => setFilters((current) => ({ ...current, status: event.target.value }))}
+                    onChange={(event) => { setOrdersPage(1); setFilters((current) => ({ ...current, status: event.target.value })); }}
                   >
                     <option value="">Todos los estados</option>
                     {ORDER_STATUSES.map((status) => <option key={status} value={status}>{formatStatus(status)}</option>)}
@@ -516,7 +523,7 @@ function Dashboard() {
                   <select
                     aria-label="Filtrar por servicio"
                     value={filters.service}
-                    onChange={(event) => setFilters((current) => ({ ...current, service: event.target.value }))}
+                    onChange={(event) => { setOrdersPage(1); setFilters((current) => ({ ...current, service: event.target.value })); }}
                   >
                     <option value="">Todos los servicios</option>
                     {services.map((service) => <option key={service} value={service}>{service}</option>)}
@@ -525,7 +532,7 @@ function Dashboard() {
                     aria-label="Filtrar por fecha"
                     type="date"
                     value={filters.date}
-                    onChange={(event) => setFilters((current) => ({ ...current, date: event.target.value }))}
+                    onChange={(event) => { setOrdersPage(1); setFilters((current) => ({ ...current, date: event.target.value })); }}
                   />
                   {hasFilters && <button type="button" className="operator-clear-filters" onClick={resetFilters}>Limpiar</button>}
                 </div>
@@ -561,7 +568,7 @@ function Dashboard() {
                         </tr>
                       </thead>
                       <tbody>
-                        {visibleOrders.map((order) => {
+                        {paginatedOrders.map((order) => {
                           const customer = customersById.get(order.CustomerID);
                           const nextStatus = NEXT_STATUS[order.Status];
                           const estimatedCost = getEstimatedCost(order);
@@ -635,6 +642,13 @@ function Dashboard() {
                       </tbody>
                     </table>
                   </div>
+                )}
+                {visibleOrders.length > PAGE_SIZE && (
+                  <nav className="operator-pagination" aria-label="PaginaciÃ³n de Ã³rdenes">
+                    <button type="button" onClick={() => setOrdersPage((page) => Math.max(1, page - 1))} disabled={currentOrdersPage === 1}>Anterior</button>
+                    <span>PÃ¡gina {currentOrdersPage} de {totalOrderPages}</span>
+                    <button type="button" onClick={() => setOrdersPage((page) => Math.min(totalOrderPages, page + 1))} disabled={currentOrdersPage === totalOrderPages}>Siguiente</button>
+                  </nav>
                 )}
               </div>
 

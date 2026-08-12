@@ -3,7 +3,7 @@ import { useAuthContext } from '../context/authContext'
 
 interface Props {
   children: React.ReactNode
-  allowedRole?: 'customer' | 'operator'
+  allowedRole?: 'customer' | 'operator' | 'admin'
 }
 
 export function ProtectedRoute({ children, allowedRole }: Props) {
@@ -14,7 +14,8 @@ export function ProtectedRoute({ children, allowedRole }: Props) {
   if (!isAuthenticated) return <Navigate to="/login" replace />
 
   if (allowedRole && user?.role !== allowedRole) {
-    return <Navigate to={user?.role === 'operator' ? '/operator' : '/dashboard'} replace />
+    const homeByRole = { admin: '/admin', operator: '/operator', customer: '/dashboard' }
+    return <Navigate to={homeByRole[user?.role ?? 'customer']} replace />
   }
 
   return <>{children}</>

@@ -2,14 +2,14 @@ export interface User {
     user_id: string
     name: string
     email: string
-    role: 'customer' | 'operator'
+    role: 'customer' | 'operator' | 'admin'
 }
 
 export interface AuthResponse {
     token: string
     name: string
     email: string
-    role: 'customer' | 'operator'
+    role: 'customer' | 'operator' | 'admin'
     user_id?: string
 }
 
@@ -75,4 +75,28 @@ export interface ServiceType {
   price_per_piece: number
   /** Compatibilidad temporal para el callback existente del selector. */
   Name: string
+}
+
+export type UserRole = 'customer' | 'operator' | 'admin'
+
+export interface AdminUser {
+  id: string
+  name: string
+  email: string
+  role: UserRole
+  is_active: boolean
+  created_at?: string
+  updated_at?: string
+}
+
+export interface PaginationMeta {
+  page: number
+  page_size: number
+  total: number
+  total_pages: number
+}
+
+export interface AdminUsersResponse {
+  users: AdminUser[]
+  pagination: PaginationMeta
 }

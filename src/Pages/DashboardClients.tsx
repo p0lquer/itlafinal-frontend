@@ -11,6 +11,7 @@ const ORDER_STEPS = ["recibida", "en_proceso", "lista", "entregada"] as const;
 const MAX_WEIGHT = 100;
 const MAX_PIECES = 200;
 const MAX_NOTES_LENGTH = 500;
+const PAGE_SIZE = 5;
 
 type OrderFilter = "todas" | "activas" | "lista" | "entregada";
 type ConnectionState = "connecting" | "connected" | "reconnecting" | "offline";
@@ -146,6 +147,7 @@ export default function DashboardClients() {
   const [formError, setFormError] = useState("");
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<OrderFilter>("todas");
+  const [ordersPage, setOrdersPage] = useState(1);
   const [connectionState, setConnectionState] = useState<ConnectionState>("connecting");
   const [toast, setToast] = useState<Toast>(null);
   const previousOrders = useRef<Order[]>([]);
@@ -280,6 +282,9 @@ export default function DashboardClients() {
       return matchesFilter && matchesQuery;
     });
   }, [filter, query, sortedOrders]);
+  const totalOrderPages = Math.max(1, Math.ceil(visibleOrders.length / PAGE_SIZE));
+  const currentOrdersPage = Math.min(ordersPage, totalOrderPages);
+  const paginatedOrders = visibleOrders.slice((currentOrdersPage - 1) * PAGE_SIZE, currentOrdersPage * PAGE_SIZE);
 
   const orderMetrics = useMemo(() => ({
     total: orders.length,
@@ -436,7 +441,7 @@ export default function DashboardClients() {
                   <table className="client-orders-table">
                     <thead className="client-orders-header"><tr><th>Orden y servicio</th><th>Estado</th><th>Fecha</th><th>Total estimado</th><th><span className="sr-only">Ver detalle</span></th></tr></thead>
                     <tbody className="client-orders-body">
-                      {visibleOrders.map((order) => (
+                      {paginatedOrders.map((order) => (
                         <tr key={order.ID} className="client-order-row" tabIndex={0} onClick={() => setSelectedOrder(order)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedOrder(order); } }}>
                           <td className="client-order-service"><strong>{order.ServiceType || "Servicio sin especificar"}</strong><span>{shortOrderId(order.ID)} · {order.PiecesCount} {order.PiecesCount === 1 ? "pieza" : "piezas"}</span></td>
                           <td className="client-order-status-cell"><span className={`client-status-badge is-${statusClass(order.Status)}`}>{statusLabel(order.Status)}</span><small>{statusDescription(order.Status)}</small></td>
@@ -448,6 +453,13 @@ export default function DashboardClients() {
                     </tbody>
                   </table>
                 </div>
+              )}
+              {visibleOrders.length > PAGE_SIZE && (
+                <nav className="client-pagination" aria-label="PaginaciÃ³n de Ã³rdenes">
+                  <button type="button" onClick={() => setOrdersPage((page) => Math.max(1, page - 1))} disabled={currentOrdersPage === 1}>Anterior</button>
+                  <span>PÃ¡gina {currentOrdersPage} de {totalOrderPages}</span>
+                  <button type="button" onClick={() => setOrdersPage((page) => Math.min(totalOrderPages, page + 1))} disabled={currentOrdersPage === totalOrderPages}>Siguiente</button>
+                </nav>
               )}
             </section>
           </div>

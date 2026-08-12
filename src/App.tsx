@@ -7,6 +7,7 @@ import { AuthProvider } from './context/authContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import DashboardClients from "./Pages/DashboardClients";
 import NotFound from "./Pages/404";
+import AdminDashboard from "./Pages/AdminDashboard";
 
 const queryClient = new QueryClient()
 
@@ -25,6 +26,15 @@ function App() {
               element={
                 <ProtectedRoute allowedRole="operator">
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute allowedRole="admin">
+                  <AdminDashboard />
                 </ProtectedRoute>
               }
             />

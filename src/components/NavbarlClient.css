@@ -17,3 +17,11 @@
 .logout-button { min-height: 36px; padding: 0 11px; border: 1px solid rgba(255, 194, 188, 0.36); border-radius: 8px; background: transparent; color: #ffc2bc; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
 .logout-button:hover { border-color: #ffc2bc; background: rgba(255, 194, 188, 0.08); }
 @media (max-width: 650px) { .navbar-client { align-items: flex-start; padding: 14px; } .navbar-nav { display: none; } .user-details { display: none; } .navbar-user { gap: 8px; } }
+
+.navbar-client { transition: border-color .2s ease, box-shadow .2s ease; }
+.navbar-client:hover { border-color: rgba(82, 227, 155, .32); box-shadow: 0 12px 28px rgba(0, 0, 0, .14); }
+.nav-link, .logout-button { transition: color .16s ease, border-color .16s ease, background-color .16s ease, transform .16s ease; }
+.logout-button:hover { transform: translateY(-1px); }
+.navbar-client :is(a, button):focus-visible { outline: 3px solid rgba(82, 227, 155, .48); outline-offset: 3px; }
+@media (max-width: 420px) { .navbar-client { gap: 10px; padding: 11px; } .logo-icon { width: 31px; height: 31px; } .logo-subtitle { display: none; } .logout-button { padding: 0 9px; } }
+@media (prefers-reduced-motion: reduce) { .navbar-client, .nav-link, .logout-button { transition-duration: .01ms !important; } }

@@ -96,7 +96,9 @@ function Login() {
       saveSession(data.token, user);
 
       // Redirigir según el rol
-      if (data.role === "operator") {
+      if (data.role === "admin") {
+        navigate("/admin");
+      } else if (data.role === "operator") {
         navigate("/operator");
       } else {
         navigate("/dashboard");
