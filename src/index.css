@@ -284,6 +284,9 @@ code {
 :root[data-theme="light"] .login-card { background: linear-gradient(160deg, #ffffff 0%, #f3faf5 100%); box-shadow: 0 20px 50px rgba(24,65,38,.16); }
 :root[data-theme="light"] .login-theme-control { background: transparent; }
 :root[data-theme="light"] .operator-orders-table th, :root[data-theme="light"] .client-orders-header th, :root[data-theme="light"] .admin-table th { color: #52705d; }
+:root[data-theme="light"] .btn-secondary, :root[data-theme="light"] .operator-pagination button { border-color: #a8c2b0; background: #ffffff; color: #294734; }
+:root[data-theme="light"] .operator-more-button, :root[data-theme="light"] .btn-delete, :root[data-theme="light"] .operator-complete-label { color: #42604c; }
+:root[data-theme="light"] .operator-pagination button:hover:not(:disabled) { color: #126c3d; background: #edf7ef; }
 :root[data-theme="light"] .operator-orders-table td, :root[data-theme="light"] .operator-customer-list strong, :root[data-theme="light"] .operator-detail-grid dd, :root[data-theme="light"] .operator-detail-notes p { color: #163122; }
 :root[data-theme="light"] .operator-cell-subtitle, :root[data-theme="light"] .operator-order-reference span, :root[data-theme="light"] .operator-customer-list span:not(.operator-customer-avatar), :root[data-theme="light"] .operator-detail-grid dt, :root[data-theme="light"] .operator-detail-notes span { color: #597060; }
 :root[data-theme="light"] .operator-order-detail { background: #ffffff; border-color: #bdd4c4; box-shadow: 0 28px 80px rgba(24,65,38,.22); }
@@ -297,6 +300,8 @@ code {
 :root[data-theme="light"] .operator-skeleton__content { background: #ffffff; }
 :root[data-theme="light"] .operator-skeleton__content span { background: linear-gradient(100deg,#edf5ef 30%,#d8eadc 48%,#edf5ef 66%); }
 :root[data-theme="light"] .client-brand-name, :root[data-theme="light"] .client-user-copy strong, :root[data-theme="light"] .client-card-heading h2, :root[data-theme="light"] .client-current-order h2, :root[data-theme="light"] .client-order-service strong, :root[data-theme="light"] .profile-value { color: #163122; }
+:root[data-theme="light"] .client-input-group label { color: #294734; }
+:root[data-theme="light"] .client-input-group small, :root[data-theme="light"] .client-label-row > span, :root[data-theme="light"] .client-order-service span, :root[data-theme="light"] .client-order-date span, :root[data-theme="light"] .client-order-status-cell small { color: #597060; }
 :root[data-theme="light"] .client-user-avatar { background: #dceee1; color: #126c3d; }
 :root[data-theme="light"] .client-status-badge.is-recibida, :root[data-theme="light"] .order-detail-status.is-recibida strong { color: #17639a; }
 :root[data-theme="light"] .client-status-badge.is-en_proceso, :root[data-theme="light"] .order-detail-status.is-en_proceso strong { color: #805b00; }
@@ -326,6 +331,8 @@ code {
 :root[data-theme="light"] .navbar-client .logo-subtitle, :root[data-theme="light"] .navbar-client .nav-link, :root[data-theme="light"] .navbar-client .user-details small { color: #597060; }
 :root[data-theme="light"] .navbar-client .avatar { background: #dceee1; color: #126c3d; }
 :root[data-theme="light"] .login-card .input-group input { color: #163122; }
+:root[data-theme="light"] .login-card .input-group input { border-color: #bdd4c4; }
+:root[data-theme="light"] .login-card .input-group label { color: #42604c; }
 :root[data-theme="light"] .login-card .input-group input::placeholder { color: #6b8272; }
 .login-theme-control { position: fixed; top: 22px; right: 24px; z-index: 3; }
 .operator-nav > .theme-toggle { margin-left: auto; }
