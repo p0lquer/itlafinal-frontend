@@ -271,7 +271,8 @@ button:disabled { cursor: not-allowed; opacity: .56; }
 .operator-order-detail { width: min(100%, 570px); max-height: calc(100vh - 36px); overflow-y: auto; border: 1px solid #45604e; border-radius: 15px; background: #111914; box-shadow: 0 30px 80px rgba(0, 0, 0, .62); }
 .operator-form-modal { padding: 26px; }
 .operator-form-modal--small { width: min(100%, 455px); }
-.operator-form-modal__header { position: relative; display: flex; justify-content: center; padding: 0 42px; text-align: center; }
+.operator-form-modal__header { position: relative; display: block; min-height: 52px; padding: 0 42px; text-align: center; }
+.operator-form-modal__header > div { width: 100%; text-align: center; }
 .operator-form-modal__header .operator-icon-button { position: absolute; top: 0; right: 0; }
 .operator-order-detail__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
 .operator-form-modal h2,
