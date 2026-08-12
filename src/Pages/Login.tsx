@@ -5,6 +5,7 @@ import { login } from "../api/auth";
 import { useAuthContext } from "../context/authContext";
 import type { User } from "../types";
 import ThemeToggle from "../components/ThemeToggle";
+import { normalizeEmail, validateEmail } from "../lib/inputValidation";
 
 interface Particle {
   x: number;
@@ -78,14 +79,15 @@ function Login() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (!email.trim() || !password.trim()) {
+    const normalizedEmail = normalizeEmail(email);
+    if (validateEmail(normalizedEmail) || !password) {
       setError("Completa tu correo y contraseña para continuar.");
       return;
     }
 
     setIsLoading(true);
     try {
-      const data = await login({ email, password });
+      const data = await login({ email: normalizedEmail, password });
 
       const user: User = {
         user_id: data.user_id ?? "",
@@ -130,6 +132,7 @@ function Login() {
               placeholder="Correo electrónico"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => setEmail((value) => normalizeEmail(value))}
               autoComplete="email"
               maxLength={120}
             />
@@ -143,7 +146,8 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
-              maxLength={60}
+              minLength={8}
+              maxLength={72}
             />
           </div>
 

@@ -67,7 +67,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isLoading,
       saveSession,
       logout,
-      isAuthenticated: !!token,
+      // Una sesión válida siempre debe contener el token y la identidad del usuario.
+      isAuthenticated: !!token && !!user,
     }}>
       {children}
     </AuthContext.Provider>

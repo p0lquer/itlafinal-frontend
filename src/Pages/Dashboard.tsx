@@ -16,6 +16,7 @@ import {
   getOrders,
   updateOrderStatus,
 } from "../api/dashboard";
+import { normalizeEmail, normalizeNotes, normalizePhone, normalizeSingleLine, validateEmail, validateName, validateOrder, validatePhone } from "../lib/inputValidation";
 
 const ORDER_STATUSES = ["recibida", "en_proceso", "lista", "entregada"] as const;
 const PAGE_SIZE = 3;
@@ -292,23 +293,16 @@ function Dashboard() {
       setFormError("Selecciona el cliente que recibirá esta orden.");
       return;
     }
-    if (!orderForm.ServiceType) {
-      setFormError("Selecciona un tipo de servicio.");
-      return;
-    }
-    if (!Number.isInteger(piecesCount) || piecesCount < 1 || piecesCount > 300) {
-      setFormError("La orden debe tener entre 1 y 300 piezas.");
-      return;
-    }
-    if (!Number.isFinite(weight) || weight <= 0 || weight > 100) {
-      setFormError("El peso debe estar entre 0.1 y 100 libras.");
+    const validationError = validateOrder(orderForm.ServiceType, weight, piecesCount, orderForm.Notes);
+    if (validationError) {
+      setFormError(validationError);
       return;
     }
 
     setSubmitting(true);
     setFormError("");
     try {
-      await createOrder({ ...orderForm, PiecesCount: piecesCount, Weight: weight });
+      await createOrder({ ...orderForm, ServiceType: normalizeSingleLine(orderForm.ServiceType), PiecesCount: piecesCount, Weight: weight, Notes: normalizeNotes(orderForm.Notes) });
       setShowOrderModal(false);
       resetOrderForm();
       showToast("Orden creada y registrada como recibida.", "success");
@@ -322,16 +316,13 @@ function Dashboard() {
 
   async function handleCreateCustomer(event: React.FormEvent) {
     event.preventDefault();
-    const name = customerForm.name.trim();
-    const email = customerForm.email.trim().toLocaleLowerCase();
-    const phone = customerForm.phone.trim();
+    const name = normalizeSingleLine(customerForm.name);
+    const email = normalizeEmail(customerForm.email);
+    const phone = normalizePhone(customerForm.phone);
 
-    if (name.length < 2) {
-      setFormError("Escribe el nombre completo del cliente.");
-      return;
-    }
-    if (phone.replace(/\D/g, "").length < 7) {
-      setFormError("Escribe un número telefónico válido.");
+    const validationError = validateName(name) ?? validatePhone(phone) ?? validateEmail(email);
+    if (validationError) {
+      setFormError(validationError);
       return;
     }
     if (customers.some((customer) => customer.Email.trim().toLocaleLowerCase() === email)) {
@@ -718,7 +709,7 @@ function Dashboard() {
                 </label>
                 <label>
                   Cantidad de piezas
-                  <input type="number" min="1" max="300" step="1" value={orderForm.PiecesCount} onChange={(event) => setOrderForm({ ...orderForm, PiecesCount: Number(event.target.value) })} required />
+                  <input type="number" min="1" max="200" step="1" value={orderForm.PiecesCount} onChange={(event) => setOrderForm({ ...orderForm, PiecesCount: Number(event.target.value) })} required />
                 </label>
               </div>
               <PriceEstimate serviceName={orderForm.ServiceType} weight={Number(orderForm.Weight)} pieces={Number(orderForm.PiecesCount)} />
@@ -749,15 +740,15 @@ function Dashboard() {
             <form onSubmit={handleCreateCustomer} className="operator-form">
               <label>
                 Nombre completo
-                <input type="text" autoComplete="name" placeholder="Ej. Ana Martínez" value={customerForm.name} onChange={(event) => setCustomerForm({ ...customerForm, name: event.target.value })} required />
+                <input type="text" autoComplete="name" placeholder="Ej. Ana Martínez" value={customerForm.name} onChange={(event) => setCustomerForm({ ...customerForm, name: event.target.value })} onBlur={() => setCustomerForm((current) => ({ ...current, name: normalizeSingleLine(current.name) }))} maxLength={80} required />
               </label>
               <label>
                 Teléfono
-                <input type="tel" autoComplete="tel" placeholder="809-555-0000" value={customerForm.phone} onChange={(event) => setCustomerForm({ ...customerForm, phone: event.target.value })} required />
+                <input type="tel" autoComplete="tel" placeholder="809-555-0000" value={customerForm.phone} onChange={(event) => setCustomerForm({ ...customerForm, phone: event.target.value })} maxLength={20} required />
               </label>
               <label>
                 Correo electrónico
-                <input type="email" autoComplete="email" placeholder="cliente@ejemplo.com" value={customerForm.email} onChange={(event) => setCustomerForm({ ...customerForm, email: event.target.value })} required />
+                <input type="email" autoComplete="email" placeholder="cliente@ejemplo.com" value={customerForm.email} onChange={(event) => setCustomerForm({ ...customerForm, email: event.target.value })} onBlur={() => setCustomerForm((current) => ({ ...current, email: normalizeEmail(current.email) }))} maxLength={254} required />
               </label>
               {formError && <p className="operator-form-error" role="alert">{formError}</p>}
               <div className="operator-form__actions">

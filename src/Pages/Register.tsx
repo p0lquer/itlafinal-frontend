@@ -3,6 +3,7 @@ import {Link } from "react-router-dom";
 import "./Login.css";
 import "./Register.css";
 import { useAuth } from '../hook/useAuth'
+import { normalizeEmail, normalizePhone, normalizeSingleLine, validateEmail, validateName, validateNewPassword, validatePhone } from "../lib/inputValidation";
 
 interface Particle {
   x: number;
@@ -27,11 +28,6 @@ function formatTelefono(value: string) {
   if (numbers.length <= 6) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
   return `${numbers.slice(0, 3)}-${numbers.slice(3, 6)}-${numbers.slice(6)}`;
 }
-
-  // Validación de correo electrónico
-    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
 
 function Register() {
   const [validationError, setValidationError] = useState("");
@@ -111,19 +107,10 @@ function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
   }, []);
 
   function validate(): string | null {
-    if (!form.name.trim()) {
-      return "El nombre es obligatorio.";
-    }
-    if (form.email.trim() && !EMAIL_REGEX.test(form.email.trim())) {
-      return "Correo electrónico no válido.";
-    }
-    if (form.phone.trim() && form.phone.replace(/\D/g, "").length < 10) {
-      return "Número de teléfono incompleto.";
-    }
-    if (!form.password || form.password.length < 8) {
-      return "La contraseña debe tener al menos 8 caracteres.";
-    }
-    return null;
+    return validateName(form.name)
+      ?? validateEmail(form.email)
+      ?? validatePhone(form.phone, false)
+      ?? validateNewPassword(form.password);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -136,9 +123,9 @@ function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     }
 
         await handleRegister({
-          name: form.name.trim(),
-          phone: form.phone.trim(),
-          email: form.email.trim(),
+          name: normalizeSingleLine(form.name),
+          phone: normalizePhone(form.phone),
+          email: normalizeEmail(form.email),
           password: form.password,
           operator_key: form.operator_key || undefined,
         });
@@ -164,28 +151,28 @@ return (
                 Nombre completo <span className="register-required">*</span>
               </label>
               <input id="name" name="name" type="text" placeholder="Tu nombre"
-                value={form.name} onChange={handleChange} autoComplete="name" />
+                value={form.name} onChange={handleChange} onBlur={() => setForm((current) => ({ ...current, name: normalizeSingleLine(current.name) }))} autoComplete="name" maxLength={80} required />
             </div>
             <div className="input-group">
               <label htmlFor="email">
                 Correo electrónico <span className="register-optional"></span>
               </label>
               <input id="email" name="email" type="email" placeholder="correo@mail.com"
-                value={form.email} onChange={handleChange} autoComplete="email" />
+                value={form.email} onChange={handleChange} onBlur={() => setForm((current) => ({ ...current, email: normalizeEmail(current.email) }))} autoComplete="email" maxLength={254} required />
             </div>
             <div className="input-group">
               <label htmlFor="password">
                 Contraseña <span className="register-required">*</span>
               </label>
               <input id="password" name="password" type="password" placeholder="tu contraseña"
-                value={form.password} onChange={handleChange} autoComplete="new-password" />
+                value={form.password} onChange={handleChange} autoComplete="new-password" minLength={8} maxLength={72} required />
             </div>
             <div className="input-group">
               <label htmlFor="phone">
                 Teléfono <span className="register-optional"></span>
               </label>
               <input id="phone" name="phone" type="tel" placeholder="809-000-0000"
-                value={form.phone} onChange={handleChange} autoComplete="tel" />
+                value={form.phone} onChange={handleChange} autoComplete="tel" maxLength={15} />
             </div>
 
              {/* Botón discreto para mostrar el campo de clave de operador */}

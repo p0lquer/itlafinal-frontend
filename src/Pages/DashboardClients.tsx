@@ -9,6 +9,7 @@ import { useAuthContext } from "../context/authContext";
 import { getMe } from "../api/auth";
 import { createOrder, getMyOrders } from "../api/dashboard";
 import type { NewOrderPayload, Order } from "../types";
+import { normalizeNotes, normalizeSingleLine, validateOrder } from "../lib/inputValidation";
 
 const ORDER_STEPS = ["recibida", "en_proceso", "lista", "entregada"] as const;
 const MAX_WEIGHT = 100;
@@ -307,20 +308,9 @@ export default function DashboardClients() {
       setFormError("No pudimos identificar tu cuenta. Actualiza la página e inténtalo otra vez.");
       return;
     }
-    if (!orderForm.ServiceType.trim()) {
-      setFormError("Selecciona el tipo de servicio que necesitas.");
-      return;
-    }
-    if (!Number.isFinite(weight) || weight <= 0 || weight > MAX_WEIGHT) {
-      setFormError(`Ingresa un peso entre 0.1 y ${MAX_WEIGHT} lb.`);
-      return;
-    }
-    if (!Number.isInteger(pieces) || pieces < 1 || pieces > MAX_PIECES) {
-      setFormError(`Ingresa entre 1 y ${MAX_PIECES} piezas.`);
-      return;
-    }
-    if (orderForm.Notes.length > MAX_NOTES_LENGTH) {
-      setFormError(`Las notas no pueden superar ${MAX_NOTES_LENGTH} caracteres.`);
+    const validationError = validateOrder(orderForm.ServiceType, weight, pieces, orderForm.Notes);
+    if (validationError) {
+      setFormError(validationError);
       return;
     }
 
@@ -328,7 +318,7 @@ export default function DashboardClients() {
     setFormError("");
     setError("");
     try {
-      await createOrder({ ...orderForm, CustomerID: customerId, PiecesCount: pieces, Weight: weight, Notes: orderForm.Notes.trim() });
+      await createOrder({ ...orderForm, CustomerID: customerId, ServiceType: normalizeSingleLine(orderForm.ServiceType), PiecesCount: pieces, Weight: weight, Notes: normalizeNotes(orderForm.Notes) });
       setShowOrderModal(false);
       resetOrderForm(customerId);
       setToast({ tone: "success", message: "Tu orden fue recibida. Te avisaremos cuando cambie de estado." });
