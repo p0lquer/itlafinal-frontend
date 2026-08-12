@@ -145,10 +145,10 @@
 
 .client-modal-overlay { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; background: rgba(0, 0, 0, 0.76); backdrop-filter: blur(6px); }
 .client-modal { width: min(100%, 560px); max-height: calc(100vh - 40px); overflow-y: auto; padding: 26px; border: 1px solid var(--client-border-strong); border-radius: 16px; background: #101714; box-shadow: 0 28px 80px rgba(0, 0, 0, 0.58); animation: pageSlideUp 0.25s var(--ease-standard); }
-.client-modal-header { display: flex; justify-content: space-between; gap: 16px; padding-bottom: 19px; border-bottom: 1px solid var(--client-border); }
+.client-modal-header { position: relative; display: flex; justify-content: center; gap: 16px; padding: 0 42px 19px; border-bottom: 1px solid var(--client-border); text-align: center; }
 .client-modal-header h2 { margin: 0; color: var(--client-text); font-size: 22px; }
 .client-modal-header > div > p:last-child { margin: 7px 0 0; color: var(--client-muted); font-size: 12px; }
-.client-modal-close { color: var(--client-muted); }
+.client-modal-close { position: absolute; top: 0; right: 0; color: var(--client-muted); }
 .client-modal-close:hover { color: var(--client-text); }
 .client-modal-form { display: grid; gap: 17px; margin-top: 20px; }
 .client-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
