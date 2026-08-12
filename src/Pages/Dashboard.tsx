@@ -17,7 +17,7 @@ import {
 } from "../api/dashboard";
 
 const ORDER_STATUSES = ["recibida", "en_proceso", "lista", "entregada"] as const;
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 3;
 
 const STATUS_LABELS: Record<string, string> = {
   recibida: "Recibida",
