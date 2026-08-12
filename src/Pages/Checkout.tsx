@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import ThemeToggle from '../components/ThemeToggle'
 import { getPaymentSummary, payOrder } from '../api/payments'
@@ -18,7 +18,12 @@ const orderFrom = (raw: unknown): Order | null => {
 export default function Checkout() {
   const { orderId = '' } = useParams()
   const { state } = useLocation()
-  const initialOrder = orderFrom((state as { order?: unknown } | null)?.order)
+  // Navigation state is an object. Keep its normalized order stable so the
+  // background refresh does not continuously restart the loading state.
+  const initialOrder = useMemo(
+    () => orderFrom((state as { order?: unknown } | null)?.order),
+    [state],
+  )
   const [summary, setSummary] = useState<PaymentSummary | null>(initialOrder ? { order: initialOrder, subtotal: initialOrder.price, total: initialOrder.price, currency: 'DOP', payment_status: initialOrder.payment_status === 'paid' ? 'paid' : 'pending' } : null)
   const [receipt, setReceipt] = useState<PaymentReceipt | null>(null)
   const [method, setMethod] = useState<PaymentMethod>('card')
@@ -30,7 +35,9 @@ export default function Checkout() {
     let alive = true
     void (async () => {
       try {
-        setLoading(true)
+        // An order passed from the list can be displayed while fresh payment
+        // information is loaded in the background.
+        if (!initialOrder) setLoading(true)
         const result = await getPaymentSummary(orderId)
         if (alive) setSummary({ ...result, order: orderFrom(result.order) ?? result.order })
       } catch {
