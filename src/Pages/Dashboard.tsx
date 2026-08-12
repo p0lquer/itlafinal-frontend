@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import "./Dashboard.css";
 import ServiceTypeSelect from "../components/ServiceTypeSelect";
+import PriceEstimate from "../components/PriceEstimate";
 import ConfirmActionModal from "../components/operator/ConfirmActionModal";
 import OperatorOrderDetailModal from "../components/operator/OperatorOrderDetailModal";
 import OperatorToast, { type OperatorToastData } from "../components/operator/OperatorToast";
@@ -720,6 +721,7 @@ function Dashboard() {
                   <input type="number" min="1" max="300" step="1" value={orderForm.PiecesCount} onChange={(event) => setOrderForm({ ...orderForm, PiecesCount: Number(event.target.value) })} required />
                 </label>
               </div>
+              <PriceEstimate serviceName={orderForm.ServiceType} weight={Number(orderForm.Weight)} pieces={Number(orderForm.PiecesCount)} />
               <label>
                 Notas
                 <textarea rows={3} maxLength={500} placeholder="Instrucciones especiales para el equipo…" value={orderForm.Notes} onChange={(event) => setOrderForm({ ...orderForm, Notes: event.target.value })} />

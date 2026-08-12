@@ -225,6 +225,8 @@
 .client-pagination button[aria-current="page"],
 .client-pagination button.is-active { border-color: var(--client-primary); background: var(--client-primary); color: var(--client-primary-ink); }
 .client-pagination button:disabled { cursor: not-allowed; opacity: .42; }
+.client-order-action { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.client-order-action .client-pay-order { background: var(--accent, #2de18e); color: #042113; border: 0; border-radius: 7px; padding: 7px 11px; font-weight: 800; }
 
 .client-dashboard-page :is(button, input, select, textarea):focus-visible,
 .client-order-row:focus-visible { outline: 3px solid rgba(82, 227, 155, .48); outline-offset: 3px; }

@@ -9,6 +9,7 @@ import DashboardClients from "./Pages/DashboardClients";
 import NotFound from "./Pages/404";
 import AdminDashboard from "./Pages/AdminDashboard";
 import { ThemeProvider } from "./context/themeContext";
+import Checkout from './Pages/Checkout';
 
 const queryClient = new QueryClient()
 
@@ -49,6 +50,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route path="/checkout/:orderId" element={<ProtectedRoute allowedRole="customer"><Checkout /></ProtectedRoute>} />
 
             
            <Route path="*" element={<NotFound />} />

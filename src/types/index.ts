@@ -47,6 +47,7 @@ export interface Order {
   updated_at: string
   ReadyAt?: string
   Notes?: string
+  payment_status?: 'pending' | 'paid' | 'cancelled' | string
 
 }
 
@@ -75,6 +76,22 @@ export interface ServiceType {
   price_per_piece: number
   /** Compatibilidad temporal para el callback existente del selector. */
   Name: string
+}
+
+export type PaymentMethod = 'card' | 'cash' | 'transfer'
+
+export interface PaymentSummary {
+  order: Order
+  subtotal: number
+  total: number
+  currency: string
+  payment_status: 'pending' | 'paid' | 'cancelled'
+  invoice_number?: string
+  paid_at?: string
+}
+
+export interface PaymentReceipt extends PaymentSummary {
+  payment_method: PaymentMethod
 }
 
 export type UserRole = 'customer' | 'operator' | 'admin'

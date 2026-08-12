@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./DashboardClients.css";
 import ServiceTypeSelect from "../components/ServiceTypeSelect";
+import PriceEstimate from "../components/PriceEstimate";
 import OrderDetailModal from "../components/OrderDetailModal";
 import ThemeToggle from "../components/ThemeToggle";
 import { useAuthContext } from "../context/authContext";
@@ -137,6 +139,7 @@ function OrderStatusTimeline({ status }: { status: string }) {
 }
 
 export default function DashboardClients() {
+  const navigate = useNavigate();
   const { user, token, logout } = useAuthContext();
   const [customerId, setCustomerId] = useState("");
   const [orders, setOrders] = useState<Order[]>([]);
@@ -449,7 +452,7 @@ export default function DashboardClients() {
                           <td className="client-order-status-cell"><span className={`client-status-badge is-${statusClass(order.Status)}`}>{statusLabel(order.Status)}</span><small>{statusDescription(order.Status)}</small></td>
                           <td className="client-order-date">{formatOrderDate(order.CreatedAt)}<span>{order.ReadyAt ? `Lista: ${formatOrderDate(order.ReadyAt)}` : "Actualización en tiempo real"}</span></td>
                           <td className="client-order-price">{new Intl.NumberFormat("es-DO", { style: "currency", currency: "DOP" }).format(order.price)}</td>
-                          <td className="client-order-action"><button type="button" aria-label={`Ver detalle de ${shortOrderId(order.ID)}`} onClick={(event) => { event.stopPropagation(); setSelectedOrder(order); }}>Ver detalle <span aria-hidden="true">→</span></button></td>
+                          <td className="client-order-action">{order.Status.toLowerCase() === "lista" && order.payment_status !== "paid" && <button type="button" className="client-pay-order" onClick={(event) => { event.stopPropagation(); navigate(`/checkout/${order.ID}`, { state: { order } }); }}>Pagar</button>}<button type="button" aria-label={`Ver detalle de ${shortOrderId(order.ID)}`} onClick={(event) => { event.stopPropagation(); setSelectedOrder(order); }}>Ver detalle <span aria-hidden="true">→</span></button></td>
                         </tr>
                       ))}
                     </tbody>
@@ -483,6 +486,7 @@ export default function DashboardClients() {
                 <div className="client-input-group"><label htmlFor="order-weight">Peso estimado (lb) <span aria-hidden="true">*</span></label><input id="order-weight" type="number" min="0.1" max={MAX_WEIGHT} step="0.1" inputMode="decimal" value={orderForm.Weight} onChange={(event) => setOrderForm((current) => ({ ...current, Weight: Number(event.target.value) }))} required /><small>Entre 0.1 y {MAX_WEIGHT} lb.</small></div>
                 <div className="client-input-group"><label htmlFor="pieces-count">Cantidad de piezas <span aria-hidden="true">*</span></label><input id="pieces-count" type="number" min="1" max={MAX_PIECES} step="1" inputMode="numeric" value={orderForm.PiecesCount} onChange={(event) => setOrderForm((current) => ({ ...current, PiecesCount: Number(event.target.value) }))} required /><small>Entre 1 y {MAX_PIECES} piezas.</small></div>
               </div>
+              <PriceEstimate serviceName={orderForm.ServiceType} weight={Number(orderForm.Weight)} pieces={Number(orderForm.PiecesCount)} />
               <div className="client-input-group"><div className="client-label-row"><label htmlFor="order-notes">Notas para el operador <span className="client-optional">Opcional</span></label><span>{orderForm.Notes.length}/{MAX_NOTES_LENGTH}</span></div><textarea id="order-notes" placeholder="Ej. Separar prendas blancas o tratar una mancha específica." value={orderForm.Notes} onChange={(event) => setOrderForm((current) => ({ ...current, Notes: event.target.value }))} rows={4} maxLength={MAX_NOTES_LENGTH} /></div>
               <div className="client-modal-actions"><button type="button" className="client-btn-secondary" onClick={closeOrderForm} disabled={submitting}>Cancelar</button><button type="submit" className="client-btn-primary" disabled={submitting}>{submitting ? "Creando orden…" : "Crear orden"}</button></div>
             </form>
