@@ -274,7 +274,9 @@ button:disabled { cursor: not-allowed; opacity: .56; }
 .operator-form-modal__header { position: relative; display: block; min-height: 52px; padding: 0 42px; text-align: center; }
 .operator-form-modal__header > div { width: 100%; text-align: center; }
 .operator-form-modal__header .operator-icon-button { position: absolute; top: 0; right: 0; }
-.operator-order-detail__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
+.operator-order-detail__header { position: relative; display: block; min-height: 52px; padding: 0 42px; text-align: center; }
+.operator-order-detail__header > div { width: 100%; text-align: center; }
+.operator-order-detail__header .operator-icon-button { position: absolute; top: 0; right: 0; }
 .operator-form-modal h2,
 .operator-dialog h2,
 .operator-order-detail h2 { margin: 7px 0 0; color: var(--op-text); font-size: 23px; letter-spacing: -.04em; }
