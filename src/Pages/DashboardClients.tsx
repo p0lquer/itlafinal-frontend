@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./DashboardClients.css";
 import ServiceTypeSelect from "../components/ServiceTypeSelect";
 import OrderDetailModal from "../components/OrderDetailModal";
+import ThemeToggle from "../components/ThemeToggle";
 import { useAuthContext } from "../context/authContext";
 import { getMe } from "../api/auth";
 import { createOrder, getMyOrders } from "../api/dashboard";
@@ -354,6 +355,7 @@ export default function DashboardClients() {
           </div>
 
           <div className="client-topbar-user">
+            <ThemeToggle />
             <div className="client-live-status" title={visibleConnectionState === "connected" ? "Notificaciones en tiempo real activas" : "Las notificaciones se reconectarán automáticamente"}>
               <span className={`client-live-dot is-${visibleConnectionState}`} aria-hidden="true" />
               <span>{visibleConnectionState === "connected" ? "En tiempo real" : "Reconectando"}</span>

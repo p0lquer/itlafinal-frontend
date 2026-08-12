@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useAuthContext } from '../context/authContext'
 import { deleteAdminUser, getAdminUsers, setUserActive, type AdminUserFilters } from '../api/admin'
 import type { AdminUser, UserRole } from '../types'
+import ThemeToggle from '../components/ThemeToggle'
 import './AdminDashboard.css'
 
 const PAGE_SIZE = 5
@@ -98,6 +99,7 @@ export default function AdminDashboard() {
             <p>Administra clientes y operadores desde un solo lugar.</p>
           </div>
           <div className="admin-profile">
+            <ThemeToggle />
             <span>{user?.name ?? 'Administrador'}</span>
             <button type="button" onClick={logout}>Cerrar sesión</button>
           </div>

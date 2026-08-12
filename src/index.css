@@ -201,3 +201,88 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+.theme-toggle {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 11px;
+  border: 1px solid rgba(142, 178, 157, 0.28);
+  border-radius: 8px;
+  background: rgba(17, 23, 20, 0.64);
+  color: #b9f6d3;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+.theme-toggle:hover { border-color: #52e39b; background: rgba(82, 227, 155, 0.1); }
+.theme-toggle span:first-child { font-size: 15px; line-height: 1; }
+
+:root[data-theme="light"] {
+  --op-bg: #f4f7f5;
+  --op-surface: #ffffff;
+  --op-surface-raised: #eff6f1;
+  --op-surface-hover: #e6f2e9;
+  --op-border: #c9ddd0;
+  --op-border-soft: rgba(42, 112, 71, .2);
+  --op-text: #163122;
+  --op-muted: #597060;
+  --op-green: #17864d;
+  --op-green-ink: #ffffff;
+  --op-danger: #a82d25;
+  --op-warning: #9b6500;
+  --op-blue: #16639a;
+  --client-bg: #f4f7f5;
+  --client-surface: #ffffff;
+  --client-surface-alt: #edf5ef;
+  --client-surface-soft: #e4f0e7;
+  --client-border: rgba(40, 99, 62, .2);
+  --client-border-strong: rgba(23, 134, 77, .36);
+  --client-text: #163122;
+  --client-muted: #587061;
+  --client-primary: #17864d;
+  --client-primary-soft: #126c3d;
+  --client-primary-ink: #ffffff;
+  --client-danger: #a82d25;
+  --admin-bg: #f4f7f5;
+  --admin-surface: #ffffff;
+  --admin-raised: #edf5ef;
+  --admin-border: rgba(40, 99, 62, .2);
+  --admin-text: #163122;
+  --admin-muted: #587061;
+  --admin-primary: #17864d;
+  --admin-primary-ink: #ffffff;
+  --admin-danger: #a82d25;
+  --bg-deep: #edf5ef;
+  --bg-card: #ffffff;
+  --border-soft: rgba(23, 134, 77, .25);
+  --accent: #17864d;
+  --accent-bright: #128447;
+  --accent-warm: #a8641e;
+  --text-primary: #163122;
+  --text-muted: #587061;
+  --input-bg: #f2f8f3;
+  color-scheme: light;
+}
+
+:root[data-theme="light"] .theme-toggle { border-color: rgba(23, 134, 77, .3); background: #ffffff; color: #126c3d; }
+:root[data-theme="light"] .dashboard-page { background: radial-gradient(circle at 6% 0%, rgba(23, 134, 77, .13), transparent 28rem), radial-gradient(circle at 92% 24%, rgba(44, 125, 78, .1), transparent 24rem), var(--op-bg); }
+:root[data-theme="light"] .operator-orders-panel, :root[data-theme="light"] .operator-customers-panel, :root[data-theme="light"] .operator-metric-card { background: #ffffff; box-shadow: 0 14px 32px rgba(24, 65, 38, .09); }
+:root[data-theme="light"] .operator-filter-bar { background: #f1f7f3; }
+:root[data-theme="light"] .operator-filter-bar select, :root[data-theme="light"] .operator-filter-bar > input, :root[data-theme="light"] .operator-search-field { background: #ffffff; color: var(--op-text); border-color: #bed4c5; }
+:root[data-theme="light"] .client-dashboard-page { background: radial-gradient(circle at 8% -5%, rgba(23, 134, 77, .13), transparent 30%), radial-gradient(circle at 96% 26%, rgba(42, 141, 102, .1), transparent 22%), var(--client-bg); }
+:root[data-theme="light"] .client-topbar { background: rgba(255,255,255,.9); }
+:root[data-theme="light"] .client-dashboard-card, :root[data-theme="light"] .client-current-order, :root[data-theme="light"] .client-metrics article { background: #ffffff; box-shadow: 0 14px 32px rgba(24,65,38,.09); }
+:root[data-theme="light"] .client-orders-table-wrap, :root[data-theme="light"] .client-modal { background: #ffffff; }
+:root[data-theme="light"] .admin-header { background: rgba(255,255,255,.9); }
+:root[data-theme="light"] .admin-card { background: #ffffff; box-shadow: 0 14px 32px rgba(24,65,38,.09); }
+:root[data-theme="light"] .admin-toolbar, :root[data-theme="light"] .admin-table th { background: #f1f7f3; }
+:root[data-theme="light"] .admin-page input, :root[data-theme="light"] .admin-page select { background: #ffffff; border-color: #bed4c5; color: var(--admin-text); }
+:root[data-theme="light"] .login-page { background: radial-gradient(circle at 30% 20%, #d9f1e2 0%, var(--bg-deep) 55%, #eaf5ed 100%); }
+:root[data-theme="light"] .login-card { background: linear-gradient(160deg, #ffffff 0%, #f3faf5 100%); box-shadow: 0 20px 50px rgba(24,65,38,.16); }
+:root[data-theme="light"] .login-theme-control { background: transparent; }
+.login-theme-control { position: fixed; top: 22px; right: 24px; z-index: 3; }
+.operator-nav > .theme-toggle { margin-left: auto; }
+@media (max-width: 640px) { .theme-toggle__label { display: none; } .theme-toggle { min-width: 36px; justify-content: center; padding: 0 9px; } .login-theme-control { top: 14px; right: 14px; } }

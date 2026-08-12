@@ -8,6 +8,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import DashboardClients from "./Pages/DashboardClients";
 import NotFound from "./Pages/404";
 import AdminDashboard from "./Pages/AdminDashboard";
+import { ThemeProvider } from "./context/themeContext";
 
 const queryClient = new QueryClient()
 
@@ -15,6 +16,7 @@ console.log("App.tsx loaded");
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
       <AuthProvider>
         <BrowserRouter>
           <Routes>
@@ -55,6 +57,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

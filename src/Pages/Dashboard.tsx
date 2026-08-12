@@ -4,6 +4,7 @@ import ServiceTypeSelect from "../components/ServiceTypeSelect";
 import ConfirmActionModal from "../components/operator/ConfirmActionModal";
 import OperatorOrderDetailModal from "../components/operator/OperatorOrderDetailModal";
 import OperatorToast, { type OperatorToastData } from "../components/operator/OperatorToast";
+import ThemeToggle from "../components/ThemeToggle";
 import { useAuthContext } from "../context/authContext";
 import type { Customer, NewCustomerPayload, NewOrderPayload, Order } from "../types";
 import {
@@ -428,6 +429,7 @@ function Dashboard() {
           <span className="operator-brand">TimeGoBetter</span>
           <span className="operator-nav-label">Centro de operaciones</span>
         </div>
+        <ThemeToggle />
         <button type="button" className="btn-logout" onClick={logout}>
           Cerrar sesión
         </button>

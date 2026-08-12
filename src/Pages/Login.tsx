@@ -4,6 +4,7 @@ import "./Login.css";
 import { login } from "../api/auth";
 import { useAuthContext } from "../context/authContext";
 import type { User } from "../types";
+import ThemeToggle from "../components/ThemeToggle";
 
 interface Particle {
   x: number;
@@ -113,6 +114,7 @@ function Login() {
 
   return (
     <div className="login-page">
+      <div className="login-theme-control"><ThemeToggle /></div>
       <canvas ref={canvasRef} className="particles-canvas" />
       <div className="login-card">
         <div className="login-eyebrow">SISTEMA DE GESTIÓN DE ÓRDENES</div>
