@@ -283,6 +283,50 @@ code {
 :root[data-theme="light"] .login-page { background: radial-gradient(circle at 30% 20%, #d9f1e2 0%, var(--bg-deep) 55%, #eaf5ed 100%); }
 :root[data-theme="light"] .login-card { background: linear-gradient(160deg, #ffffff 0%, #f3faf5 100%); box-shadow: 0 20px 50px rgba(24,65,38,.16); }
 :root[data-theme="light"] .login-theme-control { background: transparent; }
+:root[data-theme="light"] .operator-orders-table th, :root[data-theme="light"] .client-orders-header th, :root[data-theme="light"] .admin-table th { color: #52705d; }
+:root[data-theme="light"] .operator-orders-table td, :root[data-theme="light"] .operator-customer-list strong, :root[data-theme="light"] .operator-detail-grid dd, :root[data-theme="light"] .operator-detail-notes p { color: #163122; }
+:root[data-theme="light"] .operator-cell-subtitle, :root[data-theme="light"] .operator-order-reference span, :root[data-theme="light"] .operator-customer-list span:not(.operator-customer-avatar), :root[data-theme="light"] .operator-detail-grid dt, :root[data-theme="light"] .operator-detail-notes span { color: #597060; }
+:root[data-theme="light"] .operator-order-detail { background: #ffffff; border-color: #bdd4c4; box-shadow: 0 28px 80px rgba(24,65,38,.22); }
+:root[data-theme="light"] .operator-detail-status, :root[data-theme="light"] .operator-detail-notes { background: #f1f7f3; }
+:root[data-theme="light"] .operator-form label { color: #294734; }
+:root[data-theme="light"] .operator-form textarea, :root[data-theme="light"] .operator-icon-button { background: #ffffff; border-color: #bed4c5; color: #294734; }
+:root[data-theme="light"] .operator-toast { color: #163122; box-shadow: 0 17px 42px rgba(24,65,38,.18); }
+:root[data-theme="light"] .operator-toast--success { background: #e3f7ea; }
+:root[data-theme="light"] .operator-toast--error { background: #fde9e6; }
+:root[data-theme="light"] .operator-toast--info { background: #e5f2fb; }
+:root[data-theme="light"] .operator-skeleton__content { background: #ffffff; }
+:root[data-theme="light"] .operator-skeleton__content span { background: linear-gradient(100deg,#edf5ef 30%,#d8eadc 48%,#edf5ef 66%); }
+:root[data-theme="light"] .client-brand-name, :root[data-theme="light"] .client-user-copy strong, :root[data-theme="light"] .client-card-heading h2, :root[data-theme="light"] .client-current-order h2, :root[data-theme="light"] .client-order-service strong, :root[data-theme="light"] .profile-value { color: #163122; }
+:root[data-theme="light"] .client-user-avatar { background: #dceee1; color: #126c3d; }
+:root[data-theme="light"] .client-status-badge.is-recibida, :root[data-theme="light"] .order-detail-status.is-recibida strong { color: #17639a; }
+:root[data-theme="light"] .client-status-badge.is-en_proceso, :root[data-theme="light"] .order-detail-status.is-en_proceso strong { color: #805b00; }
+:root[data-theme="light"] .client-status-badge.is-entregada { color: #455c4b; }
+:root[data-theme="light"] .client-toast { background: #e3f7ea; color: #164d2c; }
+:root[data-theme="light"] .client-dashboard-error, :root[data-theme="light"] .client-form-error { background: #fde9e6; color: #8b251e; }
+:root[data-theme="light"] .client-dashboard-footer { background: #ffffff; }
+:root[data-theme="light"] .client-table-skeleton span { background: linear-gradient(90deg,#edf5ef 15%,#d8eadc 40%,#edf5ef 65%); }
+:root[data-theme="light"] .order-detail-modal { background: #ffffff; color: #163122; border-color: #bdd4c4; box-shadow: 0 28px 80px rgba(24,65,38,.24); }
+:root[data-theme="light"] .order-detail-header h2, :root[data-theme="light"] .order-detail-item strong, :root[data-theme="light"] .order-detail-info .order-detail-item strong { color: #163122; }
+:root[data-theme="light"] .order-detail-header span, :root[data-theme="light"] .order-detail-status-label, :root[data-theme="light"] .order-detail-status p, :root[data-theme="light"] .order-detail-item > span, :root[data-theme="light"] .order-detail-notes p, :root[data-theme="light"] .order-detail-footer span { color: #597060; }
+:root[data-theme="light"] .order-detail-status { background: #f1f7f3; }
+:root[data-theme="light"] .order-detail-step, :root[data-theme="light"] .order-detail-step span { color: #597060; }
+:root[data-theme="light"] .order-detail-step span { background: #ffffff; border-color: #a7c1ae; }
+:root[data-theme="light"] .order-detail-step:not(:last-child)::after { background: #b5cbbd; }
+:root[data-theme="light"] .order-detail-notes { background: #edf7ef; }
+:root[data-theme="light"] .order-detail-notes h3 { color: #294734; }
+:root[data-theme="light"] .admin-badge--customer { color: #17639a; background: #e6f2fb; }
+:root[data-theme="light"] .admin-badge--operator { color: #805b00; background: #fff5d9; }
+:root[data-theme="light"] .admin-badge--admin, :root[data-theme="light"] .admin-status--active { color: #126c3d; background: #e3f7ea; }
+:root[data-theme="light"] .admin-status--blocked { color: #8b251e; background: #fde9e6; }
+:root[data-theme="light"] .admin-toast { background: #ffffff; color: #163122; box-shadow: 0 18px 45px rgba(24,65,38,.2); }
+:root[data-theme="light"] .admin-dialog { background: #ffffff; box-shadow: 0 28px 80px rgba(24,65,38,.24); }
+:root[data-theme="light"] .admin-dialog div button:first-child { border-color: #bed4c5; color: #294734; }
+:root[data-theme="light"] .navbar-client { background: #ffffff; border-color: #bdd4c4; }
+:root[data-theme="light"] .navbar-client .logo, :root[data-theme="light"] .navbar-client .user-details span { color: #163122; }
+:root[data-theme="light"] .navbar-client .logo-subtitle, :root[data-theme="light"] .navbar-client .nav-link, :root[data-theme="light"] .navbar-client .user-details small { color: #597060; }
+:root[data-theme="light"] .navbar-client .avatar { background: #dceee1; color: #126c3d; }
+:root[data-theme="light"] .login-card .input-group input { color: #163122; }
+:root[data-theme="light"] .login-card .input-group input::placeholder { color: #6b8272; }
 .login-theme-control { position: fixed; top: 22px; right: 24px; z-index: 3; }
 .operator-nav > .theme-toggle { margin-left: auto; }
 @media (max-width: 640px) { .theme-toggle__label { display: none; } .theme-toggle { min-width: 36px; justify-content: center; padding: 0 9px; } .login-theme-control { top: 14px; right: 14px; } }
