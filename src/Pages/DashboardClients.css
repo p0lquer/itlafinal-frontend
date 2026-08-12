@@ -91,7 +91,7 @@
 .client-workflow-hint strong { color: var(--client-primary-soft); font-size: 12px; }
 .client-workflow-hint ol { display: grid; width: max-content; gap: 7px; margin: 12px auto 0; padding: 0; list-style: none; counter-reset: workflow; text-align: left; }
 .client-workflow-hint li { display: flex; align-items: center; gap: 8px; color: var(--client-muted); font-size: 12px; counter-increment: workflow; }
-.client-workflow-hint li::before { width: 18px; height: 18px; display: grid; place-items: center; border: 1px solid var(--client-border-strong); border-radius: 50%; color: var(--client-primary-soft); content: counter(workflow); font-size: 10px; font-weight: 800; }
+.client-workflow-hint li::before { min-width: 12px; color: var(--client-primary-soft); content: counter(workflow) "."; font-size: 11px; font-weight: 800; }
 
 .client-orders-toolbar { display: flex; gap: 10px; margin: 19px 0; }
 .client-search-field { flex: 1; }
