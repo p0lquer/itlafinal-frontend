@@ -128,3 +128,13 @@ export interface AdminUsersResponse {
   users: AdminUser[]
   pagination: PaginationMeta
 }
+
+export interface AnalyticsPoint { label: string; value: number }
+export interface AnalyticsDashboard {
+  summary: { orders_today: number; in_process: number; ready_for_pickup: number; delivered_today: number; active_customers: number; paid_revenue: number }
+  orders_by_status: AnalyticsPoint[]
+  orders_by_service: AnalyticsPoint[]
+  orders_trend: AnalyticsPoint[]
+  revenue_trend: AnalyticsPoint[]
+  users_by_role: AnalyticsPoint[]
+}

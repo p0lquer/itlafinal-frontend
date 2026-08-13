@@ -1,4 +1,4 @@
-import type { AdminUsersResponse, UserRole } from '../types'
+import type { AdminUsersResponse, AnalyticsDashboard, UserRole } from '../types'
 import client from './clients'
 
 export type AdminUserFilters = {
@@ -21,4 +21,9 @@ export async function setUserActive(userId: string, isActive: boolean): Promise<
 
 export async function deleteAdminUser(userId: string): Promise<void> {
   await client.delete(`/admin/users/${userId}`)
+}
+
+export async function getAnalytics(): Promise<AnalyticsDashboard> {
+  const { data } = await client.get<AnalyticsDashboard>('/admin/analytics')
+  return data
 }

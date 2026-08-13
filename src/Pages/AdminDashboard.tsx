@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuthContext } from '../context/authContext'
 import { deleteAdminUser, getAdminUsers, setUserActive, type AdminUserFilters } from '../api/admin'
 import type { AdminUser, UserRole } from '../types'
@@ -99,6 +100,7 @@ export default function AdminDashboard() {
             <p>Administra clientes y operadores desde un solo lugar.</p>
           </div>
           <div className="admin-profile">
+            <Link className="admin-analytics-link" to="/admin/analytics">Estadísticas</Link>
             <ThemeToggle />
             <span>{user?.name ?? 'Administrador'}</span>
             <button type="button" onClick={logout}>Cerrar sesión</button>

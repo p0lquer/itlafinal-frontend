@@ -9,6 +9,7 @@ import { PublicOnlyRoute } from './components/PublicOnlyRoute';
 import DashboardClients from "./Pages/DashboardClients";
 import NotFound from "./Pages/404";
 import AdminDashboard from "./Pages/AdminDashboard";
+import AdminAnalytics from "./Pages/AdminAnalytics";
 import { ThemeProvider } from "./context/themeContext";
 import Checkout from './Pages/Checkout';
 
@@ -42,6 +43,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/admin/analytics" element={<ProtectedRoute allowedRole="admin"><AdminAnalytics /></ProtectedRoute>} />
 
               <Route
                 path="/dashboard"
